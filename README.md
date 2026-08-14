@@ -1,7 +1,7 @@
 # AI Disclosure Badges
 
 <p align="center">
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-B08968?style=flat-square"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-C1652C?style=flat-square"></a>
   <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted (~25%)" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~25%25)-85B9D3?style=flat-square"></a>
   <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted (~75%)" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-215888?style=flat-square"></a>
   <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md"><img alt="AI Disclosure: ai-autonomous" src="https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6D28D9?style=flat-square"></a>
@@ -48,9 +48,9 @@ vocabulary or pick a category yourself.
 
 **`human-only`**
 
-[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-B08968?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
+[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C1652C?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
 ```markdown
-[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-B08968?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
+[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C1652C?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
 ```
 
 **`ai-assisted`** (no percentage stated)
@@ -80,7 +80,7 @@ Not part of the W3C vocabulary — purely this project's convention, chosen to
 avoid a traffic-light red/green/orange scheme that would read as a good/bad
 verdict rather than a neutral disclosure:
 
-- **`human-only`** — a warm neutral earth tone (`#B08968`), deliberately a
+- **`human-only`** — a warm neutral earth tone (`#C1652C`), deliberately a
   material/nature color (sand, clay), not a skin tone.
 - **`ai-assisted`** — a blue/cyan gradient. Lighter at a low stated AI
   percentage, darker at a high one; a fixed mid-tone blue (`#2E86AB`) when no
@@ -97,9 +97,9 @@ code and the surrounding description genuinely differ — e.g. AI-drafted PR
 description summarizing human-written code — the generator can produce two
 adjacent badges instead of one, each citing its own value:
 
-[![Code: human-only](https://img.shields.io/badge/Code-human--only-B08968?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-215888?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![Code: human-only](https://img.shields.io/badge/Code-human--only-C1652C?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-215888?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```markdown
-[![Code: human-only](https://img.shields.io/badge/Code-human--only-B08968?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-215888?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![Code: human-only](https://img.shields.io/badge/Code-human--only-C1652C?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-215888?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
 No space between the two image links keeps them visually joined into one
