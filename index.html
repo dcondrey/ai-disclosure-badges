@@ -4,7 +4,85 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Disclosure Badge Generator</title>
+<meta name="description" content="Pick the human-only, ai-assisted, or ai-autonomous badge for a PR, commit, or doc by answering a short yes/no ladder — no need to already know the W3C AI Content Disclosure vocabulary.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://dcondrey.github.io/ai-disclosure-badges/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23C86A49%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%236C4EAF%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22url%28%23g%29%22/%3E%3C/svg%3E">
+<meta name="theme-color" content="#C86A49" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#6C4EAF" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Disclosure Badges">
+<meta property="og:title" content="AI Disclosure Badge Generator">
+<meta property="og:description" content="Pick the human-only, ai-assisted, or ai-autonomous badge by answering a short yes/no ladder, grounded in the W3C AI Content Disclosure vocabulary.">
+<meta property="og:url" content="https://dcondrey.github.io/ai-disclosure-badges/">
+<meta property="og:image" content="https://img.shields.io/badge/AI_Disclosure-ai--assisted-9A5C7C?style=for-the-badge">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AI Disclosure Badge Generator">
+<meta name="twitter:description" content="Pick the human-only, ai-assisted, or ai-autonomous badge by answering a short yes/no ladder.">
+<meta name="twitter:image" content="https://img.shields.io/badge/AI_Disclosure-ai--assisted-9A5C7C?style=for-the-badge">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "AI Disclosure Badge Generator",
+  "url": "https://dcondrey.github.io/ai-disclosure-badges/",
+  "description": "A static, dependency-free tool that picks the correct human-only, ai-assisted, or ai-autonomous AI-disclosure badge via a short yes/no ladder.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (runs in browser)",
+  "isAccessibleForFree": true,
+  "license": "https://github.com/dcondrey/ai-disclosure-badges/blob/main/LICENSE",
+  "codeRepository": "https://github.com/dcondrey/ai-disclosure-badges",
+  "creator": { "@type": "Person", "name": "David Condrey", "url": "https://github.com/dcondrey" },
+  "about": { "@id": "https://dcondrey.github.io/ai-disclosure-badges/#vocabulary" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DefinedTermSet",
+  "@id": "https://dcondrey.github.io/ai-disclosure-badges/#vocabulary",
+  "name": "AI Disclosure vocabulary",
+  "description": "The human-only, ai-assisted, and ai-autonomous disclosure values defined by the W3C AI Content Disclosure Community Group.",
+  "url": "https://w3c-cg.github.io/ai-content-disclosure/",
+  "hasDefinedTerm": [
+    {
+      "@type": "DefinedTerm",
+      "name": "human-only",
+      "description": "A positive assertion that no generative AI was involved in producing the content.",
+      "url": "https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md",
+      "inDefinedTermSet": "https://dcondrey.github.io/ai-disclosure-badges/#vocabulary"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "ai-assisted",
+      "description": "Generative AI was involved in producing the content, alongside human authorship and/or human review, spanning light AI editing to AI-drafted text refined by a human.",
+      "url": "https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md",
+      "inDefinedTermSet": "https://dcondrey.github.io/ai-disclosure-badges/#vocabulary"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "ai-autonomous",
+      "description": "Content published without human involvement or review — no per-instance human prompting or oversight.",
+      "url": "https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md",
+      "inDefinedTermSet": "https://dcondrey.github.io/ai-disclosure-badges/#vocabulary"
+    }
+  ]
+}
+</script>
 <style>
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.6rem 1rem;
+    z-index: 10;
+    border-radius: 0 0 6px 0;
+  }
+  .skip-link:focus { left: 0; }
   :root {
     color-scheme: light dark;
     --bg: #ffffff;
@@ -123,14 +201,19 @@
 </head>
 <body>
 
-<h1>AI Disclosure Badge Generator</h1>
-<p class="lede">
-  Answer a few questions; get the badge that matches, with no need to pick
-  a category yourself. Badges cite the
-  <a class="explainer" href="https://w3c-cg.github.io/ai-content-disclosure/">W3C AI Content Disclosure</a>
-  vocabulary.
-</p>
+<a class="skip-link" href="#main">Skip to generator</a>
 
+<header>
+  <h1>AI Disclosure Badge Generator</h1>
+  <p class="lede">
+    Answer a few questions; get the badge that matches, with no need to pick
+    a category yourself. Badges cite the
+    <a class="explainer" href="https://w3c-cg.github.io/ai-content-disclosure/">W3C AI Content Disclosure</a>
+    vocabulary.
+  </p>
+</header>
+
+<main id="main">
 <fieldset id="scope">
   <legend>Does this badge need to say something different about the code versus the description?</legend>
   <p class="note">
@@ -149,7 +232,7 @@
   <strong>Yes</strong> and you move to the next row, one step further toward
   fully AI-authored and unreviewed.
 </p>
-<div id="ladder"></div>
+<div id="ladder" aria-live="polite"></div>
 
 <fieldset id="noteField" hidden>
   <legend>Optional note on human involvement</legend>
@@ -184,7 +267,7 @@
   </p>
 </fieldset>
 
-<section id="result" hidden>
+<section id="result" hidden aria-live="polite">
   <h2>Your badge</h2>
   <div id="badgePreview"></div>
   <div class="snippet-row">
@@ -203,6 +286,7 @@
   </div>
   <p class="note" id="explainerNote"></p>
 </section>
+</main>
 
 <footer>
   Independent reference implementation. The disclosure vocabulary is
@@ -317,13 +401,16 @@
       var legend = document.createElement('legend');
       var img = document.createElement('img');
       img.src = badge.url;
-      img.alt = badge.altText;
+      img.alt = '';
+      img.setAttribute('aria-hidden', 'true');
       legend.appendChild(img);
       legend.appendChild(document.createTextNode('If you stop here: ' + row.message));
       fs.appendChild(legend);
 
+      var qId = 'ladder-q-' + i;
       var q = document.createElement('p');
       q.className = 'note';
+      q.id = qId;
       q.textContent = row.question;
       fs.appendChild(q);
 
@@ -334,6 +421,7 @@
         input.type = 'radio';
         input.name = 'ladder-' + i;
         input.value = v;
+        input.setAttribute('aria-describedby', qId);
         input.checked = ladderAnswers[i] === v;
         label.appendChild(input);
         label.appendChild(document.createTextNode(' ' + (v === 'yes' ? 'Yes' : 'No — stop here')));

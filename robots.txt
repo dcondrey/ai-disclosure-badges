@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dcondrey.github.io/ai-disclosure-badges/sitemap.xml
