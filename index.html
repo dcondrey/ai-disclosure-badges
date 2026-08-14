@@ -61,7 +61,24 @@
     background: var(--panel);
   }
   #result[hidden] { display: none; }
-  #badgeImg { display: block; margin: 0.5rem 0 1rem; height: 20px; }
+  #badgePreview { display: flex; align-items: center; margin: 0.5rem 0 1rem; }
+  #badgePreview img { display: block; height: 20px; }
+  select.scope-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--fg);
+    margin-bottom: 0.75rem;
+  }
+  .split-col { margin-bottom: 0.75rem; }
+  .split-col label.field-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
   .snippet-row { margin-bottom: 1rem; }
   .snippet-row label {
     display: block;
@@ -113,6 +130,18 @@
   vocabulary.
 </p>
 
+<fieldset id="scope">
+  <legend>Does this badge need to say something different about the code versus the description?</legend>
+  <p class="note">
+    Most PRs, commits, and docs are one badge covering the whole
+    contribution. Split only when the two genuinely differ &mdash; e.g. the
+    code is human-written but the PR description was AI-drafted.
+  </p>
+  <label class="choice"><input type="radio" name="scope" value="whole" checked> No &mdash; one badge for the whole contribution</label>
+  <label class="choice"><input type="radio" name="scope" value="split"> Yes &mdash; split into a code badge and a description badge</label>
+</fieldset>
+
+<div id="wholeFlow">
 <fieldset id="q1">
   <legend>1. Was any generative AI involved in producing this content?</legend>
   <p class="note">
@@ -155,10 +184,31 @@
   <input type="text" id="roleNote" maxlength="120" placeholder="e.g. reviewed for factual accuracy"
     style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
 </fieldset>
+</div>
+
+<fieldset id="splitFlow" hidden>
+  <legend>Pick a value for each half</legend>
+  <div class="split-col">
+    <label class="field-label" for="codeSelect">Code</label>
+    <select id="codeSelect" class="scope-select"></select>
+  </div>
+  <div class="split-col">
+    <label class="field-label" for="descSelect">Description</label>
+    <select id="descSelect" class="scope-select"></select>
+  </div>
+  <label class="field-label" for="splitNote">Optional note</label>
+  <input type="text" id="splitNote" maxlength="120" placeholder="e.g. code human-written, description AI-drafted"
+    style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
+  <p class="note">
+    Two badges, one for each half, meant to sit next to each other with no
+    gap. Not part of the W3C vocabulary itself &mdash; each half still cites
+    one of the three spec-defined values.
+  </p>
+</fieldset>
 
 <section id="result" hidden>
   <h2>Your badge</h2>
-  <img id="badgeImg" alt="">
+  <div id="badgePreview"></div>
   <div class="snippet-row">
     <label for="mdSnippet">Markdown</label>
     <div class="snippet-wrap">
@@ -173,11 +223,7 @@
       <button class="copy" data-target="htmlSnippet">Copy</button>
     </div>
   </div>
-  <p class="note">
-    The badge links to <a id="explainerLink" class="explainer" href="#">the explainer doc</a>
-    for what this value asserts &mdash; and what it does not. Any human-involvement
-    note is carried in the badge's title/alt text only, not in its visible label.
-  </p>
+  <p class="note" id="explainerNote"></p>
 </section>
 
 <footer>
@@ -198,8 +244,27 @@
   }
 
   function shieldsUrl(label, message, color) {
-    return 'https://img.shields.io/badge/' + shieldsSegment(label) + '-' + shieldsSegment(message) + '-' + color;
+    return 'https://img.shields.io/badge/' + shieldsSegment(label) + '-' + shieldsSegment(message) + '-' + color + '?style=flat-square';
   }
+
+  var SELECT_OPTIONS = [
+    { value: 'human-only', key: 'human-only', message: 'human-only', text: 'human-only' },
+    { value: 'ai-assisted', key: 'ai-assisted', message: 'ai-assisted', text: 'ai-assisted' },
+    { value: 'ai-assisted-25', key: 'ai-assisted', message: 'ai-assisted (~25%)', text: 'ai-assisted (~25%)' },
+    { value: 'ai-assisted-50', key: 'ai-assisted', message: 'ai-assisted (~50%)', text: 'ai-assisted (~50%)' },
+    { value: 'ai-assisted-75', key: 'ai-assisted', message: 'ai-assisted (~75%)', text: 'ai-assisted (~75%)' },
+    { value: 'ai-assisted-100', key: 'ai-assisted', message: 'ai-assisted (~100%)', text: 'ai-assisted (~100%)' },
+    { value: 'ai-autonomous', key: 'ai-autonomous', message: 'ai-autonomous', text: 'ai-autonomous' }
+  ];
+
+  [document.getElementById('codeSelect'), document.getElementById('descSelect')].forEach(function (sel) {
+    SELECT_OPTIONS.forEach(function (opt) {
+      var el = document.createElement('option');
+      el.value = opt.value;
+      el.textContent = opt.text;
+      sel.appendChild(el);
+    });
+  });
 
   function currentValue() {
     var q1 = document.querySelector('input[name="q1"]:checked');
@@ -216,7 +281,68 @@
     return { key: 'ai-assisted', message: message };
   }
 
+  function selectValue(selectId) {
+    var sel = document.getElementById(selectId);
+    for (var i = 0; i < SELECT_OPTIONS.length; i++) {
+      if (SELECT_OPTIONS[i].value === sel.value) return SELECT_OPTIONS[i];
+    }
+    return SELECT_OPTIONS[0];
+  }
+
+  function buildBadge(label, value, note) {
+    var url = shieldsUrl(label, value.message, COLORS[value.key]);
+    var docHref = DOC[value.key];
+    var altText = label + ': ' + value.message;
+    var titleText = note ? altText + ' — ' + note + ' (non-normative note)' : altText;
+    return { url: url, docHref: docHref, altText: altText, titleText: titleText };
+  }
+
+  function renderBadges(badges) {
+    var preview = document.getElementById('badgePreview');
+    preview.innerHTML = '';
+    badges.forEach(function (b) {
+      var img = document.createElement('img');
+      img.src = b.url;
+      img.alt = b.altText;
+      img.title = b.titleText;
+      preview.appendChild(img);
+    });
+
+    document.getElementById('mdSnippet').value = badges.map(function (b) {
+      return '[![' + b.altText + '](' + b.url + ' "' + b.titleText.replace(/"/g, "'") + '")](' + b.docHref + ')';
+    }).join('');
+
+    document.getElementById('htmlSnippet').value = badges.map(function (b) {
+      return '<a href="' + b.docHref + '" title="' + b.titleText.replace(/"/g, '&quot;') + '"><img src="' + b.url + '" alt="' + b.altText + '"></a>';
+    }).join('');
+
+    var links = badges.map(function (b) {
+      return '<a class="explainer" href="' + b.docHref + '">' + b.altText.split(':')[0] + '</a>';
+    }).join(' and ');
+    document.getElementById('explainerNote').innerHTML =
+      'Links to ' + links + ' for what each value asserts &mdash; and what it does not. ' +
+      'Any note is carried in title/alt text only, not the visible label.';
+  }
+
   function render() {
+    var scope = document.querySelector('input[name="scope"]:checked').value;
+    document.getElementById('wholeFlow').hidden = scope !== 'whole';
+    document.getElementById('splitFlow').hidden = scope !== 'split';
+
+    var result = document.getElementById('result');
+
+    if (scope === 'split') {
+      var codeVal = selectValue('codeSelect');
+      var descVal = selectValue('descSelect');
+      var note = document.getElementById('splitNote').value.trim();
+      renderBadges([
+        buildBadge('Code', codeVal, note),
+        buildBadge('Description', descVal, note)
+      ]);
+      result.hidden = false;
+      return;
+    }
+
     var q1 = document.querySelector('input[name="q1"]:checked');
     document.getElementById('q2').hidden = !q1 || q1.value !== 'yes';
     if (!q1 || q1.value !== 'yes') {
@@ -232,32 +358,17 @@
       document.getElementById('roleNote').value = '';
     }
 
-    var result = document.getElementById('result');
     var value = currentValue();
     if (!value) { result.hidden = true; return; }
 
-    var url = shieldsUrl('AI Disclosure', value.message, COLORS[value.key]);
-    var docHref = DOC[value.key];
-    var altText = 'AI Disclosure: ' + value.message;
-
-    var note = showAssistedExtras ? document.getElementById('roleNote').value.trim() : '';
-    var titleText = note ? altText + ' — ' + note + ' (non-normative note)' : altText;
-
-    document.getElementById('badgeImg').src = url;
-    document.getElementById('badgeImg').alt = altText;
-    document.getElementById('badgeImg').title = titleText;
-    document.getElementById('explainerLink').href = docHref;
-
-    document.getElementById('mdSnippet').value =
-      '[![' + altText + '](' + url + ' "' + titleText.replace(/"/g, "'") + '")](' + docHref + ')';
-    document.getElementById('htmlSnippet').value =
-      '<a href="' + docHref + '" title="' + titleText.replace(/"/g, '&quot;') + '"><img src="' + url + '" alt="' + altText + '"></a>';
-
+    var wholeNote = showAssistedExtras ? document.getElementById('roleNote').value.trim() : '';
+    renderBadges([buildBadge('AI Disclosure', value, wholeNote)]);
     result.hidden = false;
   }
 
   document.addEventListener('change', render);
   document.getElementById('roleNote').addEventListener('input', render);
+  document.getElementById('splitNote').addEventListener('input', render);
 
   document.querySelectorAll('button.copy').forEach(function (btn) {
     btn.addEventListener('click', function () {
