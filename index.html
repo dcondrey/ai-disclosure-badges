@@ -132,8 +132,20 @@
     margin: 0.4rem 0;
     cursor: pointer;
   }
-  label.choice:hover { border-color: var(--accent); }
+  label.choice:hover, label.choice:focus-within { border-color: var(--accent); }
   label.choice input { margin-right: 0.5rem; }
+  .ladder-progress { font-weight: 600; color: var(--fg); }
+  .ladder-back {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--fg);
+    padding: 0.5rem 0.9rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+  }
+  .ladder-back:hover, .ladder-back:focus-visible { border-color: var(--accent); }
   fieldset.ladder-row legend img { height: 16px; vertical-align: middle; margin-right: 0.4rem; position: relative; top: -1px; }
   #result {
     border: 1px solid var(--border);
@@ -238,10 +250,10 @@
 
 <div id="wholeFlow">
 <p class="note">
-  Start at <code>human-only</code>. Each row asks one question: answer
+  One question at a time, starting from <code>human-only</code>. Answer
   <strong>No</strong> and you stop there &mdash; that's your badge. Answer
-  <strong>Yes</strong> and you move to the next row, one step further toward
-  fully AI-authored and unreviewed.
+  <strong>Yes</strong> and you move one step further toward fully
+  AI-authored and unreviewed. Changed your mind? Use ← Back at any point.
 </p>
 <div id="ladder" aria-live="polite"></div>
 
@@ -303,7 +315,7 @@
   Independent reference implementation. The disclosure vocabulary is
   defined by the
   <a href="https://github.com/w3c-cg/ai-content-disclosure">W3C AI Content Disclosure Community Group</a>,
-  not by this project. See the <a href="README.md">README</a> for manual badge markdown.
+  not by this project. See the <a href="https://github.com/dcondrey/ai-disclosure-badges#readme">README</a> for manual badge markdown.
 </footer>
 
 <script>
@@ -418,7 +430,7 @@
     if (stopped || terminalReached) {
       var summary = document.createElement('p');
       summary.className = 'note';
-      summary.textContent = 'Your badge is below. Answer differently?';
+      summary.textContent = 'Your badge is below. Use ← Back to change your answer.';
       container.appendChild(summary);
     } else {
       var i = ladderAnswers.length;
