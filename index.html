@@ -166,11 +166,14 @@
     This is a rough, self-reported estimate &mdash; the specification does not
     define a measurement procedure. Leave unselected to omit it.
   </p>
-  <label class="choice"><input type="radio" name="q3" value=""> Don't specify</label>
-  <label class="choice"><input type="radio" name="q3" value="25"> ~25%</label>
-  <label class="choice"><input type="radio" name="q3" value="50"> ~50%</label>
-  <label class="choice"><input type="radio" name="q3" value="75"> ~75%</label>
-  <label class="choice"><input type="radio" name="q3" value="100"> ~100%</label>
+  <label class="choice"><input type="radio" name="q3mode" value="unspecified" checked> Don't specify</label>
+  <label class="choice">
+    <input type="radio" name="q3mode" value="specify"> Specify an approximate percentage
+    <div id="percentSliderWrap" hidden style="margin-top:0.6rem;">
+      <input type="range" id="percentSlider" min="5" max="100" step="5" value="50" style="width:100%;">
+      <div class="note" style="margin:0.2rem 0 0;">~<span id="percentValue">50</span>%</div>
+    </div>
+  </label>
 </fieldset>
 
 <fieldset id="q4" hidden>
@@ -237,13 +240,18 @@
 (function () {
   var HUMAN_ONLY_COLOR = 'C1652C';
   var AI_AUTONOMOUS_COLOR = '6D28D9';
-  var AI_ASSISTED_DEFAULT_COLOR = '2E86AB';
-  var AI_ASSISTED_LIGHT = { r: 0xAE, g: 0xE3, b: 0xF5 };
-  var AI_ASSISTED_DARK = { r: 0x0B, g: 0x3C, b: 0x6D };
+  var AI_ASSISTED_DEFAULT_COLOR = '6B7280';
+
+  function hexToRgb(hex) {
+    return { r: parseInt(hex.slice(0, 2), 16), g: parseInt(hex.slice(2, 4), 16), b: parseInt(hex.slice(4, 6), 16) };
+  }
+
+  var GRADIENT_START = hexToRgb(HUMAN_ONLY_COLOR);
+  var GRADIENT_END = hexToRgb(AI_AUTONOMOUS_COLOR);
 
   function lerpHex(t) {
     function ch(c) {
-      var v = Math.round(AI_ASSISTED_LIGHT[c] + (AI_ASSISTED_DARK[c] - AI_ASSISTED_LIGHT[c]) * t);
+      var v = Math.round(GRADIENT_START[c] + (GRADIENT_END[c] - GRADIENT_START[c]) * t);
       return ('0' + v.toString(16)).slice(-2);
     }
     return (ch('r') + ch('g') + ch('b')).toUpperCase();
@@ -269,13 +277,13 @@
 
   var SELECT_OPTIONS = [
     { value: 'human-only', key: 'human-only', message: 'human-only', percent: null, text: 'human-only' },
-    { value: 'ai-assisted', key: 'ai-assisted', message: 'ai-assisted', percent: null, text: 'ai-assisted' },
-    { value: 'ai-assisted-25', key: 'ai-assisted', message: 'ai-assisted (~25%)', percent: 25, text: 'ai-assisted (~25%)' },
-    { value: 'ai-assisted-50', key: 'ai-assisted', message: 'ai-assisted (~50%)', percent: 50, text: 'ai-assisted (~50%)' },
-    { value: 'ai-assisted-75', key: 'ai-assisted', message: 'ai-assisted (~75%)', percent: 75, text: 'ai-assisted (~75%)' },
-    { value: 'ai-assisted-100', key: 'ai-assisted', message: 'ai-assisted (~100%)', percent: 100, text: 'ai-assisted (~100%)' },
-    { value: 'ai-autonomous', key: 'ai-autonomous', message: 'ai-autonomous', percent: null, text: 'ai-autonomous' }
+    { value: 'ai-assisted', key: 'ai-assisted', message: 'ai-assisted', percent: null, text: 'ai-assisted' }
   ];
+  for (var p = 10; p <= 100; p += 10) {
+    var msg = 'ai-assisted (~' + p + '%)';
+    SELECT_OPTIONS.push({ value: 'ai-assisted-' + p, key: 'ai-assisted', message: msg, percent: p, text: msg });
+  }
+  SELECT_OPTIONS.push({ value: 'ai-autonomous', key: 'ai-autonomous', message: 'ai-autonomous', percent: null, text: 'ai-autonomous' });
 
   [document.getElementById('codeSelect'), document.getElementById('descSelect')].forEach(function (sel) {
     SELECT_OPTIONS.forEach(function (opt) {
@@ -295,8 +303,8 @@
     if (!q2) return null;
     if (q2.value === 'no') return { key: 'ai-autonomous', message: 'ai-autonomous', percent: null };
 
-    var q3 = document.querySelector('input[name="q3"]:checked');
-    var percent = q3 && q3.value ? parseInt(q3.value, 10) : null;
+    var q3mode = document.querySelector('input[name="q3mode"]:checked');
+    var percent = q3mode && q3mode.value === 'specify' ? parseInt(document.getElementById('percentSlider').value, 10) : null;
     var message = 'ai-assisted' + (percent ? ' (~' + percent + '%)' : '');
     return { key: 'ai-assisted', message: message, percent: percent };
   }
@@ -374,9 +382,14 @@
     document.getElementById('q3').hidden = !showAssistedExtras;
     document.getElementById('q4').hidden = !showAssistedExtras;
     if (!showAssistedExtras) {
-      document.querySelectorAll('input[name="q3"]').forEach(function (el) { el.checked = false; });
+      document.querySelectorAll('input[name="q3mode"]').forEach(function (el) { el.checked = el.value === 'unspecified'; });
+      document.getElementById('percentSliderWrap').hidden = true;
       document.getElementById('roleNote').value = '';
     }
+
+    var q3mode = document.querySelector('input[name="q3mode"]:checked');
+    document.getElementById('percentSliderWrap').hidden = !q3mode || q3mode.value !== 'specify';
+    document.getElementById('percentValue').textContent = document.getElementById('percentSlider').value;
 
     var value = currentValue();
     if (!value) { result.hidden = true; return; }
@@ -389,6 +402,7 @@
   document.addEventListener('change', render);
   document.getElementById('roleNote').addEventListener('input', render);
   document.getElementById('splitNote').addEventListener('input', render);
+  document.getElementById('percentSlider').addEventListener('input', render);
 
   document.querySelectorAll('button.copy').forEach(function (btn) {
     btn.addEventListener('click', function () {
