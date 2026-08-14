@@ -54,6 +54,7 @@
   }
   label.choice:hover { border-color: var(--accent); }
   label.choice input { margin-right: 0.5rem; }
+  fieldset.ladder-row legend img { height: 16px; vertical-align: middle; margin-right: 0.4rem; position: relative; top: -1px; }
   #result {
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -142,42 +143,16 @@
 </fieldset>
 
 <div id="wholeFlow">
-<fieldset id="q1">
-  <legend>1. Was any generative AI involved in producing this content?</legend>
-  <p class="note">
-    Generative AI means a system trained on data that produces novel output
-    through inference. Deterministic tools &mdash; spell-check, thesauri,
-    search, calculators, templating, sensor readings, rule engines &mdash;
-    don't count.
-  </p>
-  <label class="choice"><input type="radio" name="q1" value="no"> No &mdash; no generative AI was involved</label>
-  <label class="choice"><input type="radio" name="q1" value="yes"> Yes &mdash; generative AI was involved</label>
-</fieldset>
+<p class="note">
+  Start at <code>human-only</code>. Each row asks one question: answer
+  <strong>No</strong> and you stop there &mdash; that's your badge. Answer
+  <strong>Yes</strong> and you move to the next row, one step further toward
+  fully AI-authored and unreviewed.
+</p>
+<div id="ladder"></div>
 
-<fieldset id="q2" hidden>
-  <legend>2. Was there human prompting, review, or editing before publication?</legend>
-  <label class="choice"><input type="radio" name="q2" value="no"> No &mdash; published without per-instance human review</label>
-  <label class="choice"><input type="radio" name="q2" value="yes"> Yes &mdash; a human prompted, reviewed, or edited it</label>
-</fieldset>
-
-<fieldset id="q3" hidden>
-  <legend>3. Roughly what percentage of the final content was AI-authored? <span style="font-weight:400;">(optional)</span></legend>
-  <p class="note">
-    This is a rough, self-reported estimate &mdash; the specification does not
-    define a measurement procedure. Leave unselected to omit it.
-  </p>
-  <label class="choice"><input type="radio" name="q3mode" value="unspecified" checked> Don't specify</label>
-  <label class="choice">
-    <input type="radio" name="q3mode" value="specify"> Specify an approximate percentage
-    <div id="percentSliderWrap" hidden style="margin-top:0.6rem;">
-      <input type="range" id="percentSlider" min="10" max="100" step="10" value="50" style="width:100%;">
-      <div class="note" style="margin:0.2rem 0 0;">~<span id="percentValue">50</span>%</div>
-    </div>
-  </label>
-</fieldset>
-
-<fieldset id="q4" hidden>
-  <legend>4. Optional note on human involvement</legend>
+<fieldset id="noteField" hidden>
+  <legend>Optional note on human involvement</legend>
   <p class="note">
     Free text, e.g. "reviewed for factual accuracy" or "AI drafted, human
     rewrote throughout." This is <strong>not</strong> part of the W3C
@@ -238,8 +213,8 @@
 
 <script>
 (function () {
-  var HUMAN_ONLY_COLOR = 'C1652C';
-  var AI_AUTONOMOUS_COLOR = '6D28D9';
+  var HUMAN_ONLY_COLOR = 'C86A49';
+  var AI_AUTONOMOUS_COLOR = '6C4EAF';
   var AI_ASSISTED_DEFAULT_COLOR = '6B7280';
 
   function hexToRgb(hex) {
@@ -294,20 +269,93 @@
     });
   });
 
-  function currentValue() {
-    var q1 = document.querySelector('input[name="q1"]:checked');
-    if (!q1) return null;
-    if (q1.value === 'no') return { key: 'human-only', message: 'human-only', percent: null };
+  var LADDER = [
+    { key: 'human-only', message: 'human-only', percent: null,
+      question: 'Was any generative AI involved in producing this content? Generative AI means a system trained on data that produces novel output through inference — deterministic tools (spell-check, thesauri, search, calculators, templating, sensor readings, rule engines) don’t count.' },
+    { key: 'ai-assisted', message: 'ai-assisted (~10%)', percent: 10,
+      question: 'Did AI do more than a light copyedit or grammar pass — did it also rewrite or contribute wording/ideas in at least a few sentences or a short section?' },
+    { key: 'ai-assisted', message: 'ai-assisted (~20%)', percent: 20,
+      question: 'Did AI’s contribution extend beyond a few sentences or one section — to multiple passages or sections throughout the piece?' },
+    { key: 'ai-assisted', message: 'ai-assisted (~30%)', percent: 30,
+      question: 'Is AI’s contribution now a substantial minority of the final text (roughly a third to just under half), not just isolated passages?' },
+    { key: 'ai-assisted', message: 'ai-assisted (~40%)', percent: 40,
+      question: 'Is it roughly an even split — did AI produce about as much of the final text as the human did?' },
+    { key: 'ai-assisted', message: 'ai-assisted (~50%)', percent: 50,
+      question: 'Did AI produce more of the final text than the human did?' },
+    { key: 'ai-assisted', message: 'ai-assisted (~60%)', percent: 60,
+      question: 'Did AI produce most of the draft (roughly two-thirds or more), with human contribution limited to an outline/prompts plus substantive rewrites of a few sections?' },
+    { key: 'ai-assisted', message: 'ai-assisted (~70%)', percent: 70,
+      question: 'Did AI produce nearly the entire draft, with human involvement limited to targeted edits or corrections rather than writing sections?' },
+    { key: 'ai-assisted', message: 'ai-assisted (~80%)', percent: 80,
+      question: 'Were the human’s edits light — fixing errors and minor wording — rather than substantive rewriting?' },
+    { key: 'ai-assisted', message: 'ai-assisted (~90%)', percent: 90,
+      question: 'Did the human’s involvement amount to no more than a read-through or approval, with no edits at all?' },
+    { key: 'ai-assisted', message: 'ai-assisted (~100%)', percent: 100,
+      question: 'Was there truly zero human review before publication — not even a read-through?' }
+  ];
+  var LADDER_TERMINAL = { key: 'ai-autonomous', message: 'ai-autonomous', percent: null };
 
-    var q2 = document.querySelector('input[name="q2"]:checked');
-    if (!q2) return null;
-    if (q2.value === 'no') return { key: 'ai-autonomous', message: 'ai-autonomous', percent: null };
+  var ladderAnswers = [];
 
-    var q3mode = document.querySelector('input[name="q3mode"]:checked');
-    var percent = q3mode && q3mode.value === 'specify' ? parseInt(document.getElementById('percentSlider').value, 10) : null;
-    var message = 'ai-assisted' + (percent ? ' (~' + percent + '%)' : '');
-    return { key: 'ai-assisted', message: message, percent: percent };
+  function ladderResult() {
+    for (var i = 0; i < LADDER.length; i++) {
+      if (ladderAnswers[i] === undefined) return null;
+      if (ladderAnswers[i] === 'no') return LADDER[i];
+    }
+    return LADDER_TERMINAL;
   }
+
+  function renderLadder() {
+    var container = document.getElementById('ladder');
+    container.innerHTML = '';
+    for (var i = 0; i < LADDER.length; i++) {
+      var row = LADDER[i];
+      var badge = buildBadge('AI Disclosure', row, null);
+      var fs = document.createElement('fieldset');
+      fs.className = 'ladder-row';
+
+      var legend = document.createElement('legend');
+      var img = document.createElement('img');
+      img.src = badge.url;
+      img.alt = badge.altText;
+      legend.appendChild(img);
+      legend.appendChild(document.createTextNode('If you stop here: ' + row.message));
+      fs.appendChild(legend);
+
+      var q = document.createElement('p');
+      q.className = 'note';
+      q.textContent = row.question;
+      fs.appendChild(q);
+
+      ['yes', 'no'].forEach(function (v) {
+        var label = document.createElement('label');
+        label.className = 'choice';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'ladder-' + i;
+        input.value = v;
+        input.checked = ladderAnswers[i] === v;
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(' ' + (v === 'yes' ? 'Yes' : 'No — stop here')));
+        fs.appendChild(label);
+      });
+
+      container.appendChild(fs);
+      if (ladderAnswers[i] !== 'yes') break;
+    }
+  }
+
+  document.getElementById('ladder').addEventListener('change', function (e) {
+    var name = e.target.name || '';
+    var m = /^ladder-(\d+)$/.exec(name);
+    if (!m) return;
+    var idx = parseInt(m[1], 10);
+    ladderAnswers = ladderAnswers.slice(0, idx);
+    ladderAnswers[idx] = e.target.value;
+    renderLadder();
+  });
+
+  renderLadder();
 
   function selectValue(selectId) {
     var sel = document.getElementById(selectId);
@@ -371,30 +419,11 @@
       return;
     }
 
-    var q1 = document.querySelector('input[name="q1"]:checked');
-    document.getElementById('q2').hidden = !q1 || q1.value !== 'yes';
-    if (!q1 || q1.value !== 'yes') {
-      document.querySelectorAll('input[name="q2"]').forEach(function (el) { el.checked = false; });
-    }
-
-    var q2 = document.querySelector('input[name="q2"]:checked');
-    var showAssistedExtras = q1 && q1.value === 'yes' && q2 && q2.value === 'yes';
-    document.getElementById('q3').hidden = !showAssistedExtras;
-    document.getElementById('q4').hidden = !showAssistedExtras;
-    if (!showAssistedExtras) {
-      document.querySelectorAll('input[name="q3mode"]').forEach(function (el) { el.checked = el.value === 'unspecified'; });
-      document.getElementById('percentSliderWrap').hidden = true;
-      document.getElementById('roleNote').value = '';
-    }
-
-    var q3mode = document.querySelector('input[name="q3mode"]:checked');
-    document.getElementById('percentSliderWrap').hidden = !q3mode || q3mode.value !== 'specify';
-    document.getElementById('percentValue').textContent = document.getElementById('percentSlider').value;
-
-    var value = currentValue();
+    var value = ladderResult();
+    document.getElementById('noteField').hidden = !value;
     if (!value) { result.hidden = true; return; }
 
-    var wholeNote = showAssistedExtras ? document.getElementById('roleNote').value.trim() : '';
+    var wholeNote = document.getElementById('roleNote').value.trim();
     renderBadges([buildBadge('AI Disclosure', value, wholeNote)]);
     result.hidden = false;
   }
@@ -402,7 +431,6 @@
   document.addEventListener('change', render);
   document.getElementById('roleNote').addEventListener('input', render);
   document.getElementById('splitNote').addEventListener('input', render);
-  document.getElementById('percentSlider').addEventListener('input', render);
 
   document.querySelectorAll('button.copy').forEach(function (btn) {
     btn.addEventListener('click', function () {

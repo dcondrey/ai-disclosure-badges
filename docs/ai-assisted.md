@@ -55,6 +55,12 @@ spec's own [boundary guidance](https://w3c-cg.github.io/ai-content-disclosure/#b
 "if your situation looks roughly like this, this band is a reasonable
 pick," not as thresholds to satisfy exactly.
 
+The [generator](../index.html) implements this same progression as a
+ladder: starting from `human-only`, each row asks one yes/no question
+gating the next step up. Answer "no" and you stop at that row's badge;
+answer "yes" and you move one step closer to `ai-autonomous`. The table
+below is the same anchors, for reference outside the generator.
+
 | Band | Roughly looks like |
 |---|---|
 | ~10% | Human-written draft with an AI grammar/style pass (e.g. Grammarly-style). AI touched wording, not structure or ideas. |

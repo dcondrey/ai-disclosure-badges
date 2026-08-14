@@ -1,10 +1,10 @@
 # AI Disclosure Badges
 
 <p align="center">
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-C1652C?style=flat-square"></a>
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted (~25%)" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~25%25)-AC5657?style=flat-square"></a>
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted (~75%)" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-8237AE?style=flat-square"></a>
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md"><img alt="AI Disclosure: ai-autonomous" src="https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6D28D9?style=flat-square"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted (~25%)" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~25%25)-B16362?style=flat-square"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted (~75%)" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-835596?style=flat-square"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md"><img alt="AI Disclosure: ai-autonomous" src="https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square"></a>
 </p>
 
 Shields.io-style badges for the `human-only` / `ai-assisted` / `ai-autonomous`
@@ -48,9 +48,9 @@ vocabulary or pick a category yourself.
 
 **`human-only`**
 
-[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C1652C?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
+[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
 ```markdown
-[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C1652C?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
+[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
 ```
 
 **`ai-assisted`** (no percentage stated)
@@ -62,16 +62,16 @@ vocabulary or pick a category yourself.
 
 **`ai-assisted`, with the optional percentage** ([`ai-assisted-percent`](https://w3c-cg.github.io/ai-content-disclosure/#ai-assisted-percent), currently a proposal under discussion in the spec). The color shifts from `human-only`'s terracotta toward `ai-autonomous`'s violet as the stated AI share increases — see [Colors](#colors).
 
-[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-8237AE?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-835596?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```markdown
-[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-8237AE?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-835596?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
 **`ai-autonomous`**
 
-[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6D28D9?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
+[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
 ```markdown
-[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6D28D9?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
+[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
 ```
 
 ## Colors
@@ -80,9 +80,9 @@ Not part of the W3C vocabulary — purely this project's convention, chosen to
 avoid a traffic-light red/green/orange scheme that would read as a good/bad
 verdict rather than a neutral disclosure:
 
-- **`human-only`** — terracotta (`#C1652C`), deliberately a material/nature
+- **`human-only`** — terracotta (`#C86A49`), deliberately a material/nature
   color (clay, pottery), not a skin tone.
-- **`ai-autonomous`** — violet (`#6D28D9`).
+- **`ai-autonomous`** — violet (`#6C4EAF`).
 - **`ai-assisted`** — spans the spectrum between those two colors, keyed to
   the stated AI percentage: near-terracotta at a low percentage, near-violet
   at a high one, so a barely-AI-touched piece reads visually close to
@@ -95,23 +95,23 @@ verdict rather than a neutral disclosure:
 The generator offers percentage in 10% bands. The full range, terracotta to
 violet:
 
-[![10%](https://img.shields.io/badge/10%25-B95F3D?style=flat-square)](docs/ai-assisted.md)[![20%](https://img.shields.io/badge/20%25-B0594F?style=flat-square)](docs/ai-assisted.md)[![30%](https://img.shields.io/badge/30%25-A85360?style=flat-square)](docs/ai-assisted.md)[![40%](https://img.shields.io/badge/40%25-9F4D71?style=flat-square)](docs/ai-assisted.md)[![50%](https://img.shields.io/badge/50%25-974682?style=flat-square)](docs/ai-assisted.md)[![60%](https://img.shields.io/badge/60%25-8F4094?style=flat-square)](docs/ai-assisted.md)[![70%](https://img.shields.io/badge/70%25-863AA5?style=flat-square)](docs/ai-assisted.md)[![80%](https://img.shields.io/badge/80%25-7E34B6?style=flat-square)](docs/ai-assisted.md)[![90%](https://img.shields.io/badge/90%25-752EC8?style=flat-square)](docs/ai-assisted.md)[![100%](https://img.shields.io/badge/100%25-6D28D9?style=flat-square)](docs/ai-assisted.md)
+[![10%](https://img.shields.io/badge/10%25-BF6753?style=flat-square)](docs/ai-assisted.md)[![20%](https://img.shields.io/badge/20%25-B6645D?style=flat-square)](docs/ai-assisted.md)[![30%](https://img.shields.io/badge/30%25-AC6268?style=flat-square)](docs/ai-assisted.md)[![40%](https://img.shields.io/badge/40%25-A35F72?style=flat-square)](docs/ai-assisted.md)[![50%](https://img.shields.io/badge/50%25-9A5C7C?style=flat-square)](docs/ai-assisted.md)[![60%](https://img.shields.io/badge/60%25-915986?style=flat-square)](docs/ai-assisted.md)[![70%](https://img.shields.io/badge/70%25-885690?style=flat-square)](docs/ai-assisted.md)[![80%](https://img.shields.io/badge/80%25-7E549B?style=flat-square)](docs/ai-assisted.md)[![90%](https://img.shields.io/badge/90%25-7551A5?style=flat-square)](docs/ai-assisted.md)[![100%](https://img.shields.io/badge/100%25-6C4EAF?style=flat-square)](docs/ai-assisted.md)
 
 Each band's color and what it roughly represents
 ([full descriptions in `docs/ai-assisted.md`](docs/ai-assisted.md#illustrative-anchors-for-each-10-band)):
 
 | Band | Color |
 |---|---|
-| ~10% | `#B95F3D` |
-| ~20% | `#B0594F` |
-| ~30% | `#A85360` |
-| ~40% | `#9F4D71` |
-| ~50% | `#974682` |
-| ~60% | `#8F4094` |
-| ~70% | `#863AA5` |
-| ~80% | `#7E34B6` |
-| ~90% | `#752EC8` |
-| ~100% | `#6D28D9` |
+| ~10% | `#BF6753` |
+| ~20% | `#B6645D` |
+| ~30% | `#AC6268` |
+| ~40% | `#A35F72` |
+| ~50% | `#9A5C7C` |
+| ~60% | `#915986` |
+| ~70% | `#885690` |
+| ~80% | `#7E549B` |
+| ~90% | `#7551A5` |
+| ~100% | `#6C4EAF` |
 
 ## Split badges (code vs. description)
 
@@ -120,9 +120,9 @@ code and the surrounding description genuinely differ — e.g. AI-drafted PR
 description summarizing human-written code — the generator can produce two
 adjacent badges instead of one, each citing its own value:
 
-[![Code: human-only](https://img.shields.io/badge/Code-human--only-C1652C?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-8237AE?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![Code: human-only](https://img.shields.io/badge/Code-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-835596?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```markdown
-[![Code: human-only](https://img.shields.io/badge/Code-human--only-C1652C?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-8237AE?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![Code: human-only](https://img.shields.io/badge/Code-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-835596?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
 No space between the two image links keeps them visually joined into one
