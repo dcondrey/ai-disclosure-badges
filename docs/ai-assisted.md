@@ -43,6 +43,37 @@ absence of human review. Content can be 100% AI-authored and still be
 before publication — the two axes (how much AI wrote vs. whether a human
 looked at it) are independent.
 
+## Illustrative anchors for each 10% band
+
+The spec deliberately declines to define a measurement procedure for
+`ai-assisted-percent` — see above. That means there is no formula that
+converts "what actually happened" into a number, and this project isn't
+attempting to supply one. What follows is **illustrative guidance, not a
+rule**: rough anchors to help you pick a band, in the same spirit as the
+spec's own [boundary guidance](https://w3c-cg.github.io/ai-content-disclosure/#boundary-guidance)
+(examples on each side of a line, not a test you compute). Treat these as
+"if your situation looks roughly like this, this band is a reasonable
+pick," not as thresholds to satisfy exactly.
+
+| Band | Roughly looks like |
+|---|---|
+| ~10% | Human-written draft with an AI grammar/style pass (e.g. Grammarly-style). AI touched wording, not structure or ideas. |
+| ~20% | Human-written draft with AI help on a few sentences or one short section. |
+| ~30% | Human draft with AI-rewritten passages in several places (e.g. AI expanded a few bullet points into prose). |
+| ~40% | Human wrote the core argument/structure; AI contributed meaningful passages throughout, still a minority of the text. |
+| ~50% | Roughly even split — human and AI each produced about half the final text. |
+| ~60% | AI produced most passages from a human outline or prompts; human wrote some sections directly. |
+| ~70% | AI produced most of the draft from human prompts/outline; human substantively rewrote select sections. |
+| ~80% | AI produced nearly the entire draft; human made targeted edits or corrections to specific passages. |
+| ~90% | AI produced the entire draft; human's edits were light (fixing errors, minor wording) across most of the piece. |
+| ~100% | AI produced the entire draft; human review was a read-through/approval with no substantive edits. Still `ai-assisted`, not `ai-autonomous` — a human did review it before publication. |
+
+These anchors describe the *content*, not a workflow you must follow to
+qualify — arriving at, say, "human wrote a full draft, then had AI rewrite
+it entirely, then rewrote it back by hand" and landing near ~100% because
+that's what the *final text* looks like is a legitimate use of this table,
+even though the process looked nothing like the row's description.
+
 ## The optional human-involvement note
 
 This project's badge generator additionally offers a free-text note (e.g.

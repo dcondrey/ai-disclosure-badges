@@ -92,6 +92,27 @@ verdict rather than a neutral disclosure:
   ~50%. Computed by linear interpolation between the `human-only` and
   `ai-autonomous` hex values — see `colorFor()` in [`index.html`](index.html).
 
+The generator offers percentage in 10% bands. The full range, terracotta to
+violet:
+
+[![10%](https://img.shields.io/badge/10%25-B95F3D?style=flat-square)](docs/ai-assisted.md)[![20%](https://img.shields.io/badge/20%25-B0594F?style=flat-square)](docs/ai-assisted.md)[![30%](https://img.shields.io/badge/30%25-A85360?style=flat-square)](docs/ai-assisted.md)[![40%](https://img.shields.io/badge/40%25-9F4D71?style=flat-square)](docs/ai-assisted.md)[![50%](https://img.shields.io/badge/50%25-974682?style=flat-square)](docs/ai-assisted.md)[![60%](https://img.shields.io/badge/60%25-8F4094?style=flat-square)](docs/ai-assisted.md)[![70%](https://img.shields.io/badge/70%25-863AA5?style=flat-square)](docs/ai-assisted.md)[![80%](https://img.shields.io/badge/80%25-7E34B6?style=flat-square)](docs/ai-assisted.md)[![90%](https://img.shields.io/badge/90%25-752EC8?style=flat-square)](docs/ai-assisted.md)[![100%](https://img.shields.io/badge/100%25-6D28D9?style=flat-square)](docs/ai-assisted.md)
+
+Each band's color and what it roughly represents
+([full descriptions in `docs/ai-assisted.md`](docs/ai-assisted.md#illustrative-anchors-for-each-10-band)):
+
+| Band | Color |
+|---|---|
+| ~10% | `#B95F3D` |
+| ~20% | `#B0594F` |
+| ~30% | `#A85360` |
+| ~40% | `#9F4D71` |
+| ~50% | `#974682` |
+| ~60% | `#8F4094` |
+| ~70% | `#863AA5` |
+| ~80% | `#7E34B6` |
+| ~90% | `#752EC8` |
+| ~100% | `#6D28D9` |
+
 ## Split badges (code vs. description)
 
 A single badge asserts disclosure for a contribution as a whole. When the
