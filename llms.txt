@@ -1,0 +1,28 @@
+# AI Disclosure Badges
+
+> A static, dependency-free tool that picks the correct human-only,
+> ai-assisted, or ai-autonomous badge for a PR, commit, or doc by walking a
+> short yes/no ladder, grounded in the W3C AI Content Disclosure vocabulary.
+
+This is an independent reference implementation, not a W3C deliverable. The
+vocabulary itself is normatively defined at
+https://w3c-cg.github.io/ai-content-disclosure/ — this project only
+packages it as copy-pasteable shields.io badges plus a generator for
+picking the right one.
+
+## Primary pages
+
+- [Generator](https://dcondrey.github.io/ai-disclosure-badges/): the interactive question-ladder tool. Requires JavaScript.
+- [README](https://github.com/dcondrey/ai-disclosure-badges#readme): manual badge markdown for all three values plus the 10% ai-assisted gradient bands, for anyone who doesn't want to use the generator.
+
+## Vocabulary reference
+
+- [human-only](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md): positive assertion that no generative AI was involved.
+- [ai-assisted](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md): AI involved alongside human authorship and/or review; includes the optional ai-assisted-percent figure and per-decile illustrative anchors.
+- [ai-autonomous](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md): published without per-instance human involvement or review.
+
+## What none of these badges assert
+
+No cryptographic proof, no AI-detection claim, no enforcement — all three
+are voluntary, self-reported disclosures. See each doc's "What this badge
+does NOT assert" section for specifics.

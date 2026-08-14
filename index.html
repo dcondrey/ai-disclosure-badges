@@ -7,6 +7,8 @@
 <meta name="description" content="Pick the human-only, ai-assisted, or ai-autonomous badge for a PR, commit, or doc by answering a short yes/no ladder — no need to already know the W3C AI Content Disclosure vocabulary.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://dcondrey.github.io/ai-disclosure-badges/">
+<link rel="preconnect" href="https://img.shields.io" crossorigin>
+<link rel="dns-prefetch" href="https://img.shields.io">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23C86A49%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%236C4EAF%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22url%28%23g%29%22/%3E%3C/svg%3E">
 <meta name="theme-color" content="#C86A49" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#6C4EAF" media="(prefers-color-scheme: dark)">
@@ -201,6 +203,15 @@
 </head>
 <body>
 
+<noscript>
+  <p style="background:#fee2e2;color:#7f1d1d;padding:1rem;margin:0;text-align:center;">
+    This generator needs JavaScript to build a badge for you (it constructs a
+    shields.io URL from your answers). With JavaScript off, copy the
+    markdown by hand instead &mdash; see
+    <a href="https://github.com/dcondrey/ai-disclosure-badges#or-just-copy-the-markdown">the README's "Or just copy the markdown" section</a>.
+  </p>
+</noscript>
+
 <a class="skip-link" href="#main">Skip to generator</a>
 
 <header>
@@ -213,7 +224,7 @@
   </p>
 </header>
 
-<main id="main">
+<main id="main" tabindex="-1">
 <fieldset id="scope">
   <legend>Does this badge need to say something different about the code versus the description?</legend>
   <p class="note">
@@ -274,14 +285,14 @@
     <label for="mdSnippet">Markdown</label>
     <div class="snippet-wrap">
       <textarea id="mdSnippet" class="snippet" readonly></textarea>
-      <button class="copy" data-target="mdSnippet">Copy</button>
+      <button class="copy" data-target="mdSnippet" aria-label="Copy Markdown snippet">Copy</button>
     </div>
   </div>
   <div class="snippet-row">
     <label for="htmlSnippet">HTML</label>
     <div class="snippet-wrap">
       <textarea id="htmlSnippet" class="snippet" readonly></textarea>
-      <button class="copy" data-target="htmlSnippet">Copy</button>
+      <button class="copy" data-target="htmlSnippet" aria-label="Copy HTML snippet">Copy</button>
     </div>
   </div>
   <p class="note" id="explainerNote"></p>
@@ -389,14 +400,37 @@
     return LADDER_TERMINAL;
   }
 
+  function goBack() {
+    ladderAnswers = ladderAnswers.slice(0, ladderAnswers.length - 1);
+    renderLadder();
+    render();
+    var radio = document.querySelector('#ladder input[type=radio]');
+    if (radio) radio.focus();
+  }
+
   function renderLadder() {
     var container = document.getElementById('ladder');
     container.innerHTML = '';
-    for (var i = 0; i < LADDER.length; i++) {
+
+    var stopped = ladderAnswers.length > 0 && ladderAnswers[ladderAnswers.length - 1] === 'no';
+    var terminalReached = ladderAnswers.length === LADDER.length && ladderAnswers[LADDER.length - 1] === 'yes';
+
+    if (stopped || terminalReached) {
+      var summary = document.createElement('p');
+      summary.className = 'note';
+      summary.textContent = 'Your badge is below. Answer differently?';
+      container.appendChild(summary);
+    } else {
+      var i = ladderAnswers.length;
       var row = LADDER[i];
       var badge = buildBadge('AI Disclosure', row, null);
       var fs = document.createElement('fieldset');
       fs.className = 'ladder-row';
+
+      var progress = document.createElement('p');
+      progress.className = 'note ladder-progress';
+      progress.textContent = 'Question ' + (i + 1) + ' of up to ' + LADDER.length;
+      container.appendChild(progress);
 
       var legend = document.createElement('legend');
       var img = document.createElement('img');
@@ -422,14 +456,22 @@
         input.name = 'ladder-' + i;
         input.value = v;
         input.setAttribute('aria-describedby', qId);
-        input.checked = ladderAnswers[i] === v;
         label.appendChild(input);
         label.appendChild(document.createTextNode(' ' + (v === 'yes' ? 'Yes' : 'No — stop here')));
         fs.appendChild(label);
       });
 
       container.appendChild(fs);
-      if (ladderAnswers[i] !== 'yes') break;
+    }
+
+    if (ladderAnswers.length > 0) {
+      var backBtn = document.createElement('button');
+      backBtn.type = 'button';
+      backBtn.className = 'ladder-back';
+      backBtn.textContent = '← Back';
+      backBtn.setAttribute('aria-label', 'Back to the previous question');
+      backBtn.addEventListener('click', goBack);
+      container.appendChild(backBtn);
     }
   }
 
@@ -438,9 +480,22 @@
     var m = /^ladder-(\d+)$/.exec(name);
     if (!m) return;
     var idx = parseInt(m[1], 10);
+    var answer = e.target.value;
     ladderAnswers = ladderAnswers.slice(0, idx);
-    ladderAnswers[idx] = e.target.value;
+    ladderAnswers[idx] = answer;
     renderLadder();
+
+    // Rebuilding #ladder destroys the radio that was just focused, dropping
+    // keyboard focus to <body>. Restore it once render() (bound to the
+    // document-level 'change' listener) has finished updating visibility.
+    setTimeout(function () {
+      var nextRadio = document.querySelector('#ladder input[type=radio]');
+      if (answer === 'yes' && idx + 1 < LADDER.length && nextRadio) {
+        nextRadio.focus();
+      } else if (!document.getElementById('noteField').hidden) {
+        document.getElementById('roleNote').focus();
+      }
+    }, 0);
   });
 
   renderLadder();
@@ -520,14 +575,36 @@
   document.getElementById('roleNote').addEventListener('input', render);
   document.getElementById('splitNote').addEventListener('input', render);
 
+  function showCopied(btn, originalText, originalLabel) {
+    btn.textContent = 'Copied';
+    btn.setAttribute('aria-label', originalLabel.replace('Copy ', '') + ' copied');
+    setTimeout(function () {
+      btn.textContent = originalText;
+      btn.setAttribute('aria-label', originalLabel);
+    }, 1200);
+  }
+
   document.querySelectorAll('button.copy').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var ta = document.getElementById(btn.getAttribute('data-target'));
-      ta.select();
-      document.execCommand('copy');
-      var original = btn.textContent;
-      btn.textContent = 'Copied';
-      setTimeout(function () { btn.textContent = original; }, 1200);
+      var originalText = btn.textContent;
+      var originalLabel = btn.getAttribute('aria-label');
+
+      // Prefer the modern Clipboard API; fall back to the older select+execCommand
+      // technique for browsers (or non-HTTPS contexts) where it's unavailable.
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ta.value).then(function () {
+          showCopied(btn, originalText, originalLabel);
+        }, function () {
+          ta.select();
+          document.execCommand('copy');
+          showCopied(btn, originalText, originalLabel);
+        });
+      } else {
+        ta.select();
+        document.execCommand('copy');
+        showCopied(btn, originalText, originalLabel);
+      }
     });
   });
 })();
