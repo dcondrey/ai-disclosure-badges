@@ -39,9 +39,10 @@ unstated.
 
 ## Use the generator
 
-Open [`index.html`](index.html) (works offline, no server needed — or host
-it via GitHub Pages). Answer a few short questions; it picks the matching
-badge and gives you Markdown and HTML snippets to paste, no need to know the
+**[dcondrey.github.io/ai-disclosure-badges](https://dcondrey.github.io/ai-disclosure-badges/)**
+— or open [`index.html`](index.html) directly, it works offline with no
+server needed. Answer a few short questions; it picks the matching badge and
+gives you Markdown and HTML snippets to paste, no need to know the
 vocabulary or pick a category yourself.
 
 ## Or just copy the markdown
