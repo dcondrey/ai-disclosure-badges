@@ -235,7 +235,27 @@
 
 <script>
 (function () {
-  var COLORS = { 'human-only': 'brightgreen', 'ai-assisted': 'yellow', 'ai-autonomous': 'orange' };
+  var HUMAN_ONLY_COLOR = 'B08968';
+  var AI_AUTONOMOUS_COLOR = '6D28D9';
+  var AI_ASSISTED_DEFAULT_COLOR = '2E86AB';
+  var AI_ASSISTED_LIGHT = { r: 0xAE, g: 0xE3, b: 0xF5 };
+  var AI_ASSISTED_DARK = { r: 0x0B, g: 0x3C, b: 0x6D };
+
+  function lerpHex(t) {
+    function ch(c) {
+      var v = Math.round(AI_ASSISTED_LIGHT[c] + (AI_ASSISTED_DARK[c] - AI_ASSISTED_LIGHT[c]) * t);
+      return ('0' + v.toString(16)).slice(-2);
+    }
+    return (ch('r') + ch('g') + ch('b')).toUpperCase();
+  }
+
+  function colorFor(key, percent) {
+    if (key === 'human-only') return HUMAN_ONLY_COLOR;
+    if (key === 'ai-autonomous') return AI_AUTONOMOUS_COLOR;
+    if (!percent) return AI_ASSISTED_DEFAULT_COLOR;
+    return lerpHex(Math.min(100, Math.max(0, percent)) / 100);
+  }
+
   var REPO_BASE = 'https://github.com/dcondrey/ai-disclosure-badges/blob/main/';
   var DOC = { 'human-only': REPO_BASE + 'docs/human-only.md', 'ai-assisted': REPO_BASE + 'docs/ai-assisted.md', 'ai-autonomous': REPO_BASE + 'docs/ai-autonomous.md' };
 
@@ -248,13 +268,13 @@
   }
 
   var SELECT_OPTIONS = [
-    { value: 'human-only', key: 'human-only', message: 'human-only', text: 'human-only' },
-    { value: 'ai-assisted', key: 'ai-assisted', message: 'ai-assisted', text: 'ai-assisted' },
-    { value: 'ai-assisted-25', key: 'ai-assisted', message: 'ai-assisted (~25%)', text: 'ai-assisted (~25%)' },
-    { value: 'ai-assisted-50', key: 'ai-assisted', message: 'ai-assisted (~50%)', text: 'ai-assisted (~50%)' },
-    { value: 'ai-assisted-75', key: 'ai-assisted', message: 'ai-assisted (~75%)', text: 'ai-assisted (~75%)' },
-    { value: 'ai-assisted-100', key: 'ai-assisted', message: 'ai-assisted (~100%)', text: 'ai-assisted (~100%)' },
-    { value: 'ai-autonomous', key: 'ai-autonomous', message: 'ai-autonomous', text: 'ai-autonomous' }
+    { value: 'human-only', key: 'human-only', message: 'human-only', percent: null, text: 'human-only' },
+    { value: 'ai-assisted', key: 'ai-assisted', message: 'ai-assisted', percent: null, text: 'ai-assisted' },
+    { value: 'ai-assisted-25', key: 'ai-assisted', message: 'ai-assisted (~25%)', percent: 25, text: 'ai-assisted (~25%)' },
+    { value: 'ai-assisted-50', key: 'ai-assisted', message: 'ai-assisted (~50%)', percent: 50, text: 'ai-assisted (~50%)' },
+    { value: 'ai-assisted-75', key: 'ai-assisted', message: 'ai-assisted (~75%)', percent: 75, text: 'ai-assisted (~75%)' },
+    { value: 'ai-assisted-100', key: 'ai-assisted', message: 'ai-assisted (~100%)', percent: 100, text: 'ai-assisted (~100%)' },
+    { value: 'ai-autonomous', key: 'ai-autonomous', message: 'ai-autonomous', percent: null, text: 'ai-autonomous' }
   ];
 
   [document.getElementById('codeSelect'), document.getElementById('descSelect')].forEach(function (sel) {
@@ -269,16 +289,16 @@
   function currentValue() {
     var q1 = document.querySelector('input[name="q1"]:checked');
     if (!q1) return null;
-    if (q1.value === 'no') return { key: 'human-only', message: 'human-only' };
+    if (q1.value === 'no') return { key: 'human-only', message: 'human-only', percent: null };
 
     var q2 = document.querySelector('input[name="q2"]:checked');
     if (!q2) return null;
-    if (q2.value === 'no') return { key: 'ai-autonomous', message: 'ai-autonomous' };
+    if (q2.value === 'no') return { key: 'ai-autonomous', message: 'ai-autonomous', percent: null };
 
     var q3 = document.querySelector('input[name="q3"]:checked');
-    var message = 'ai-assisted';
-    if (q3 && q3.value) message += ' (~' + q3.value + '%)';
-    return { key: 'ai-assisted', message: message };
+    var percent = q3 && q3.value ? parseInt(q3.value, 10) : null;
+    var message = 'ai-assisted' + (percent ? ' (~' + percent + '%)' : '');
+    return { key: 'ai-assisted', message: message, percent: percent };
   }
 
   function selectValue(selectId) {
@@ -290,7 +310,7 @@
   }
 
   function buildBadge(label, value, note) {
-    var url = shieldsUrl(label, value.message, COLORS[value.key]);
+    var url = shieldsUrl(label, value.message, colorFor(value.key, value.percent));
     var docHref = DOC[value.key];
     var altText = label + ': ' + value.message;
     var titleText = note ? altText + ' — ' + note + ' (non-normative note)' : altText;

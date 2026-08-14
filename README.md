@@ -1,14 +1,30 @@
 # AI Disclosure Badges
 
+<p align="center">
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-B08968?style=flat-square"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted (~25%)" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~25%25)-85B9D3?style=flat-square"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted (~75%)" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-215888?style=flat-square"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md"><img alt="AI Disclosure: ai-autonomous" src="https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6D28D9?style=flat-square"></a>
+</p>
+
 Shields.io-style badges for the `human-only` / `ai-assisted` / `ai-autonomous`
 vocabulary defined by the
-[AI Content Disclosure for HTML](https://w3c-cg.github.io/ai-content-disclosure/)
-specification, from the W3C AI Content Disclosure Community Group.
+[AI Content Disclosure for HTML][spec] specification, from the W3C AI
+Content Disclosure Community Group.
 
 **This is an independent reference implementation, not a W3C CG deliverable.**
 The disclosure vocabulary itself is normatively defined and maintained at
-[w3c-cg/ai-content-disclosure](https://github.com/w3c-cg/ai-content-disclosure);
-this repo only packages that vocabulary as copy-pasteable badges.
+[w3c-cg/ai-content-disclosure][spec-repo]; this repo only packages that
+vocabulary as copy-pasteable badges.
+
+This repo hosts:
+
+- The [badge generator](index.html) — a static, dependency-free question flow
+- The [explainer docs](#what-each-badge-means) each badge links to
+- The [color and split-badge conventions](#colors) used to build them
+
+[spec]: https://w3c-cg.github.io/ai-content-disclosure/
+[spec-repo]: https://github.com/w3c-cg/ai-content-disclosure
 
 ## Why
 
@@ -31,24 +47,48 @@ vocabulary or pick a category yourself.
 ## Or just copy the markdown
 
 **`human-only`**
+
+[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-B08968?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
 ```markdown
-[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-brightgreen?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
+[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-B08968?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
 ```
 
-**`ai-assisted`**
+**`ai-assisted`** (no percentage stated)
+
+[![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-2E86AB?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```markdown
-[![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-yellow?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-2E86AB?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
-**`ai-assisted`, with the optional percentage** ([`ai-assisted-percent`](https://w3c-cg.github.io/ai-content-disclosure/#ai-assisted-percent), currently a proposal under discussion in the spec)
+**`ai-assisted`, with the optional percentage** ([`ai-assisted-percent`](https://w3c-cg.github.io/ai-content-disclosure/#ai-assisted-percent), currently a proposal under discussion in the spec). The color darkens as the stated AI share increases — see [Colors](#colors).
+
+[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-215888?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```markdown
-[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-yellow?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-215888?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
 **`ai-autonomous`**
+
+[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6D28D9?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
 ```markdown
-[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-orange?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
+[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6D28D9?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
 ```
+
+## Colors
+
+Not part of the W3C vocabulary — purely this project's convention, chosen to
+avoid a traffic-light red/green/orange scheme that would read as a good/bad
+verdict rather than a neutral disclosure:
+
+- **`human-only`** — a warm neutral earth tone (`#B08968`), deliberately a
+  material/nature color (sand, clay), not a skin tone.
+- **`ai-assisted`** — a blue/cyan gradient. Lighter at a low stated AI
+  percentage, darker at a high one; a fixed mid-tone blue (`#2E86AB`) when no
+  percentage is given. Computed by linear interpolation between `#AEE3F5`
+  (0%) and `#0B3C6D` (100%) — see `colorFor()` in [`index.html`](index.html).
+- **`ai-autonomous`** — violet (`#6D28D9`), visually distinct from the blue
+  family since no percentage applies (autonomous content has no human
+  authorship step to measure AI share against).
 
 ## Split badges (code vs. description)
 
@@ -57,8 +97,9 @@ code and the surrounding description genuinely differ — e.g. AI-drafted PR
 description summarizing human-written code — the generator can produce two
 adjacent badges instead of one, each citing its own value:
 
+[![Code: human-only](https://img.shields.io/badge/Code-human--only-B08968?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-215888?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```markdown
-[![Code: human-only](https://img.shields.io/badge/Code-human--only-brightgreen?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-yellow?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![Code: human-only](https://img.shields.io/badge/Code-human--only-B08968?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-215888?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
 No space between the two image links keeps them visually joined into one
@@ -80,6 +121,11 @@ Every badge doc also states what the badge does **not** assert: no
 cryptographic proof, no AI-detection claim, no enforcement. These are
 voluntary, self-reported disclosures — the same trust model as any other
 badge in a README.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). This project follows the
+[Contributor Covenant](CODE_OF_CONDUCT.md).
 
 ## License
 
