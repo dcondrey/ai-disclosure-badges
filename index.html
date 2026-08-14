@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Disclosure Badge Generator</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #5a5a5a;
+    --border: #d8d8d8;
+    --accent: #2454ff;
+    --panel: #f6f6f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --fg: #e8e8e8;
+      --muted: #a0a0a0;
+      --border: #3a3d44;
+      --accent: #6f96ff;
+      --panel: #1d2026;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+  h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  p.lede { color: var(--muted); margin-top: 0; }
+  fieldset {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem 1.25rem;
+    margin: 0 0 1.25rem;
+  }
+  fieldset[hidden] { display: none; }
+  legend { font-weight: 600; padding: 0 0.4rem; }
+  .note { color: var(--muted); font-size: 0.9rem; margin: 0.25rem 0 0.75rem; }
+  label.choice {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    margin: 0.4rem 0;
+    cursor: pointer;
+  }
+  label.choice:hover { border-color: var(--accent); }
+  label.choice input { margin-right: 0.5rem; }
+  #result {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    background: var(--panel);
+  }
+  #result[hidden] { display: none; }
+  #badgeImg { display: block; margin: 0.5rem 0 1rem; height: 20px; }
+  .snippet-row { margin-bottom: 1rem; }
+  .snippet-row label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+  .snippet-wrap { display: flex; gap: 0.5rem; }
+  textarea.snippet {
+    flex: 1;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--fg);
+    resize: none;
+    height: 3.2em;
+  }
+  button.copy {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--fg);
+    padding: 0 0.9rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  button.copy:hover { border-color: var(--accent); }
+  a.explainer { color: var(--accent); }
+  footer {
+    margin-top: 3rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+
+<h1>AI Disclosure Badge Generator</h1>
+<p class="lede">
+  Answer a few questions; get the badge that matches, with no need to pick
+  a category yourself. Badges cite the
+  <a class="explainer" href="https://w3c-cg.github.io/ai-content-disclosure/">W3C AI Content Disclosure</a>
+  vocabulary.
+</p>
+
+<fieldset id="q1">
+  <legend>1. Was any generative AI involved in producing this content?</legend>
+  <p class="note">
+    Generative AI means a system trained on data that produces novel output
+    through inference. Deterministic tools &mdash; spell-check, thesauri,
+    search, calculators, templating, sensor readings, rule engines &mdash;
+    don't count.
+  </p>
+  <label class="choice"><input type="radio" name="q1" value="no"> No &mdash; no generative AI was involved</label>
+  <label class="choice"><input type="radio" name="q1" value="yes"> Yes &mdash; generative AI was involved</label>
+</fieldset>
+
+<fieldset id="q2" hidden>
+  <legend>2. Was there human prompting, review, or editing before publication?</legend>
+  <label class="choice"><input type="radio" name="q2" value="no"> No &mdash; published without per-instance human review</label>
+  <label class="choice"><input type="radio" name="q2" value="yes"> Yes &mdash; a human prompted, reviewed, or edited it</label>
+</fieldset>
+
+<fieldset id="q3" hidden>
+  <legend>3. Roughly what percentage of the final content was AI-authored? <span style="font-weight:400;">(optional)</span></legend>
+  <p class="note">
+    This is a rough, self-reported estimate &mdash; the specification does not
+    define a measurement procedure. Leave unselected to omit it.
+  </p>
+  <label class="choice"><input type="radio" name="q3" value=""> Don't specify</label>
+  <label class="choice"><input type="radio" name="q3" value="25"> ~25%</label>
+  <label class="choice"><input type="radio" name="q3" value="50"> ~50%</label>
+  <label class="choice"><input type="radio" name="q3" value="75"> ~75%</label>
+  <label class="choice"><input type="radio" name="q3" value="100"> ~100%</label>
+</fieldset>
+
+<fieldset id="q4" hidden>
+  <legend>4. Optional note on human involvement</legend>
+  <p class="note">
+    Free text, e.g. "reviewed for factual accuracy" or "AI drafted, human
+    rewrote throughout." This is <strong>not</strong> part of the W3C
+    specification's controlled vocabulary &mdash; it's a plain-language note
+    carried in the badge's title/alt text, not a new disclosure category.
+  </p>
+  <input type="text" id="roleNote" maxlength="120" placeholder="e.g. reviewed for factual accuracy"
+    style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
+</fieldset>
+
+<section id="result" hidden>
+  <h2>Your badge</h2>
+  <img id="badgeImg" alt="">
+  <div class="snippet-row">
+    <label for="mdSnippet">Markdown</label>
+    <div class="snippet-wrap">
+      <textarea id="mdSnippet" class="snippet" readonly></textarea>
+      <button class="copy" data-target="mdSnippet">Copy</button>
+    </div>
+  </div>
+  <div class="snippet-row">
+    <label for="htmlSnippet">HTML</label>
+    <div class="snippet-wrap">
+      <textarea id="htmlSnippet" class="snippet" readonly></textarea>
+      <button class="copy" data-target="htmlSnippet">Copy</button>
+    </div>
+  </div>
+  <p class="note">
+    The badge links to <a id="explainerLink" class="explainer" href="#">the explainer doc</a>
+    for what this value asserts &mdash; and what it does not. Any human-involvement
+    note is carried in the badge's title/alt text only, not in its visible label.
+  </p>
+</section>
+
+<footer>
+  Independent reference implementation. The disclosure vocabulary is
+  defined by the
+  <a href="https://github.com/w3c-cg/ai-content-disclosure">W3C AI Content Disclosure Community Group</a>,
+  not by this project. See the <a href="README.md">README</a> for manual badge markdown.
+</footer>
+
+<script>
+(function () {
+  var COLORS = { 'human-only': 'brightgreen', 'ai-assisted': 'yellow', 'ai-autonomous': 'orange' };
+  var DOC = { 'human-only': 'docs/human-only.md', 'ai-assisted': 'docs/ai-assisted.md', 'ai-autonomous': 'docs/ai-autonomous.md' };
+
+  function shieldsSegment(text) {
+    return encodeURIComponent(String(text).replace(/-/g, '--').replace(/ /g, '_'));
+  }
+
+  function shieldsUrl(label, message, color) {
+    return 'https://img.shields.io/badge/' + shieldsSegment(label) + '-' + shieldsSegment(message) + '-' + color;
+  }
+
+  function currentValue() {
+    var q1 = document.querySelector('input[name="q1"]:checked');
+    if (!q1) return null;
+    if (q1.value === 'no') return { key: 'human-only', message: 'human-only' };
+
+    var q2 = document.querySelector('input[name="q2"]:checked');
+    if (!q2) return null;
+    if (q2.value === 'no') return { key: 'ai-autonomous', message: 'ai-autonomous' };
+
+    var q3 = document.querySelector('input[name="q3"]:checked');
+    var message = 'ai-assisted';
+    if (q3 && q3.value) message += ' (~' + q3.value + '%)';
+    return { key: 'ai-assisted', message: message };
+  }
+
+  function render() {
+    var q1 = document.querySelector('input[name="q1"]:checked');
+    document.getElementById('q2').hidden = !q1 || q1.value !== 'yes';
+    if (!q1 || q1.value !== 'yes') {
+      document.querySelectorAll('input[name="q2"]').forEach(function (el) { el.checked = false; });
+    }
+
+    var q2 = document.querySelector('input[name="q2"]:checked');
+    var showAssistedExtras = q1 && q1.value === 'yes' && q2 && q2.value === 'yes';
+    document.getElementById('q3').hidden = !showAssistedExtras;
+    document.getElementById('q4').hidden = !showAssistedExtras;
+    if (!showAssistedExtras) {
+      document.querySelectorAll('input[name="q3"]').forEach(function (el) { el.checked = false; });
+      document.getElementById('roleNote').value = '';
+    }
+
+    var result = document.getElementById('result');
+    var value = currentValue();
+    if (!value) { result.hidden = true; return; }
+
+    var url = shieldsUrl('AI Disclosure', value.message, COLORS[value.key]);
+    var docHref = DOC[value.key];
+    var altText = 'AI Disclosure: ' + value.message;
+
+    var note = showAssistedExtras ? document.getElementById('roleNote').value.trim() : '';
+    var titleText = note ? altText + ' — ' + note + ' (non-normative note)' : altText;
+
+    document.getElementById('badgeImg').src = url;
+    document.getElementById('badgeImg').alt = altText;
+    document.getElementById('badgeImg').title = titleText;
+    document.getElementById('explainerLink').href = docHref;
+
+    document.getElementById('mdSnippet').value =
+      '[![' + altText + '](' + url + ' "' + titleText.replace(/"/g, "'") + '")](' + docHref + ')';
+    document.getElementById('htmlSnippet').value =
+      '<a href="' + docHref + '" title="' + titleText.replace(/"/g, '&quot;') + '"><img src="' + url + '" alt="' + altText + '"></a>';
+
+    result.hidden = false;
+  }
+
+  document.addEventListener('change', render);
+  document.getElementById('roleNote').addEventListener('input', render);
+
+  document.querySelectorAll('button.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var ta = document.getElementById(btn.getAttribute('data-target'));
+      ta.select();
+      document.execCommand('copy');
+      var original = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(function () { btn.textContent = original; }, 1200);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
