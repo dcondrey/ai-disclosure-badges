@@ -82,14 +82,22 @@ even though the process looked nothing like the row's description.
 
 ## The optional human-involvement note
 
-This project's badge generator additionally offers a free-text note (e.g.
-"reviewed for factual accuracy," "AI drafted, human rewrote throughout"),
-carried in the badge's `title`/`alt` text rather than its visible label.
-**This note is not part of the W3C specification.** The spec defines only
-`ai-assisted-percent` as an optional refinement; it deliberately does not
-define a controlled vocabulary for the type of human involvement. Treat any
-such note as informal color supplied by the badge's author, not as a
-citable disclosure value.
+`ai-assisted-percent` measures authorship share of the final text — it says
+nothing about how much a human steered the work to get there. A human who
+rejects an AI's first approach, sets the requirements, or redirects the
+architecture mid-task can drive the outcome heavily while still not writing
+any of the final words themselves; the percentage alone won't show that.
+
+This project's badge generator offers a free-text note for exactly this,
+carried in the badge's `title`/`alt` text rather than its visible label. It
+covers both axes — depth of review ("reviewed for factual accuracy," "AI
+drafted, human rewrote throughout") and depth of direction ("human set
+requirements and rejected the first approach; AI implemented the
+revision"). **This note is not part of the W3C specification.** The spec
+defines only `ai-assisted-percent` as an optional refinement; it
+deliberately does not define a controlled vocabulary for the type of human
+involvement. Treat any such note as informal color supplied by the badge's
+author, not as a citable disclosure value.
 
 ## What "AI" means here
 

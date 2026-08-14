@@ -260,12 +260,18 @@
 <fieldset id="noteField" hidden>
   <legend>Optional note on human involvement</legend>
   <p class="note">
-    Free text, e.g. "reviewed for factual accuracy" or "AI drafted, human
-    rewrote throughout." This is <strong>not</strong> part of the W3C
-    specification's controlled vocabulary &mdash; it's a plain-language note
-    carried in the badge's title/alt text, not a new disclosure category.
+    The percentage above (if shown) measures how much of the final text AI
+    produced &mdash; it says nothing about how much a human steered the
+    work. This note is the place for that: what you reviewed, or what you
+    directed &mdash; rejected drafts, set the approach, redirected
+    architecture, corrected a wrong turn. E.g. "reviewed for factual
+    accuracy," "AI drafted, human rewrote throughout," or "human set
+    requirements and rejected the first approach; AI implemented the
+    revision." This is <strong>not</strong> part of the W3C specification's
+    controlled vocabulary &mdash; it's a plain-language note carried in the
+    badge's title/alt text, not a new disclosure category.
   </p>
-  <input type="text" id="roleNote" maxlength="120" placeholder="e.g. reviewed for factual accuracy"
+  <input type="text" id="roleNote" maxlength="120" placeholder="e.g. human directed architecture, rejected first draft; AI implemented"
     style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
 </fieldset>
 </div>
@@ -281,7 +287,7 @@
     <select id="descSelect" class="scope-select"></select>
   </div>
   <label class="field-label" for="splitNote">Optional note</label>
-  <input type="text" id="splitNote" maxlength="120" placeholder="e.g. code human-written, description AI-drafted"
+  <input type="text" id="splitNote" maxlength="120" placeholder="e.g. code human-written; description AI-drafted from human-directed outline"
     style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
   <p class="note">
     Two badges, one for each half, meant to sit next to each other with no
