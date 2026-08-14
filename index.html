@@ -190,7 +190,8 @@
 <script>
 (function () {
   var COLORS = { 'human-only': 'brightgreen', 'ai-assisted': 'yellow', 'ai-autonomous': 'orange' };
-  var DOC = { 'human-only': 'docs/human-only.md', 'ai-assisted': 'docs/ai-assisted.md', 'ai-autonomous': 'docs/ai-autonomous.md' };
+  var REPO_BASE = 'https://github.com/dcondrey/ai-disclosure-badges/blob/main/';
+  var DOC = { 'human-only': REPO_BASE + 'docs/human-only.md', 'ai-assisted': REPO_BASE + 'docs/ai-assisted.md', 'ai-autonomous': REPO_BASE + 'docs/ai-autonomous.md' };
 
   function shieldsSegment(text) {
     return encodeURIComponent(String(text).replace(/-/g, '--').replace(/ /g, '_'));

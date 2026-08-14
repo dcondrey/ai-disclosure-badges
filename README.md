@@ -32,22 +32,22 @@ vocabulary or pick a category yourself.
 
 **`human-only`**
 ```markdown
-[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-brightgreen)](docs/human-only.md)
+[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-brightgreen)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
 ```
 
 **`ai-assisted`**
 ```markdown
-[![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-yellow)](docs/ai-assisted.md)
+[![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-yellow)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
 **`ai-assisted`, with the optional percentage** ([`ai-assisted-percent`](https://w3c-cg.github.io/ai-content-disclosure/#ai-assisted-percent), currently a proposal under discussion in the spec)
 ```markdown
-[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_%28~75%25%29-yellow)](docs/ai-assisted.md)
+[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_%28~75%25%29-yellow)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
 **`ai-autonomous`**
 ```markdown
-[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-orange)](docs/ai-autonomous.md)
+[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-orange)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
 ```
 
 ## What each badge means
