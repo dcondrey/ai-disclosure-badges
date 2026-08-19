@@ -1,0 +1,50 @@
+name: Link Check
+
+# Deliberately separate from pages.yml — a broken/flaky external link
+# should never block deploying a legitimate content change. This is a
+# reporting check, not a deploy gate.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # External links (spec repo, C2PA, etc.) can rot even with no local
+    # changes — catch that on a slow weekly cadence.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: lycheeverse/lychee-action@v2.9.0
+        with:
+          args: >-
+            --include-fragments
+            --root-dir .
+            --exclude 'ai-disclosure-badges/ai-disclosure-badges$'
+            --verbose
+            --no-progress
+            './**/*.md'
+            './**/*.html'
+          fail: true
+        # --include-fragments: lychee otherwise only checks that a linked
+        #   file exists, not that a #anchor inside it is real — the whole
+        #   point of this check is catching anchor drift, so this is load
+        #   bearing, not optional.
+        # --root-dir .: without it, 404.html's root-relative link
+        #   ("/ai-disclosure-badges/", correct for the deployed GitHub
+        #   Pages site) fails to resolve at all and errors out every run.
+        # --exclude '...$': that same link, once --root-dir makes it
+        #   resolvable, resolves to a *local* path
+        #   ("<repo>/ai-disclosure-badges") that doesn't exist — there's
+        #   no local equivalent for a link that only makes sense once
+        #   deployed one path segment down. Excluded rather than "fixed",
+        #   since it isn't broken.
+        # Do NOT add --base/--base-url: it makes lychee resolve *every*
+        # relative link repo-wide against that origin instead of checking
+        # them as local files, which produces dozens of false 404s.
