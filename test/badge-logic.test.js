@@ -1,5 +1,8 @@
 // Zero-dependency tests using Node's built-in test runner:
-//   node --test test/
+//   node --test
+// (not `node --test test/` — Node's directory-arg auto-discovery didn't
+// pick this up in the version this was written against; bare `node --test`
+// does, via its own default file-discovery glob.)
 'use strict';
 
 const test = require('node:test');
@@ -101,7 +104,7 @@ test('buildWholeMarkup with no optional fields emits only the meta tag and bare 
   );
 });
 
-test('buildSplitMarkup uses mixed as the page-level default and per-element attributes for each half', () => {
+test('buildSplitMarkup uses mixed as the page-level default when code and description disagree', () => {
   const markup = BadgeLogic.buildSplitMarkup(
     { key: 'human-only' },
     { key: 'ai-assisted' }
@@ -109,6 +112,22 @@ test('buildSplitMarkup uses mixed as the page-level default and per-element attr
   assert.match(markup, /<meta name="ai-disclosure" content="mixed">/);
   assert.match(markup, /<pre ai-disclosure="human-only">\.\.\.code\.\.\.<\/pre>/);
   assert.match(markup, /<p ai-disclosure="ai-assisted">\.\.\.description\.\.\.<\/p>/);
+});
+
+test('buildSplitMarkup does NOT claim mixed when code and description agree', () => {
+  const markup = BadgeLogic.buildSplitMarkup(
+    { key: 'human-only' },
+    { key: 'human-only' }
+  );
+  assert.doesNotMatch(markup, /mixed/, 'a single true default, not a false "these disagree" claim');
+  assert.match(markup, /<meta name="ai-disclosure" content="human-only">/);
+  assert.match(markup, /<pre ai-disclosure="human-only">\.\.\.code\.\.\.<\/pre>/);
+  assert.match(markup, /<p ai-disclosure="human-only">\.\.\.description\.\.\.<\/p>/);
+});
+
+test('escMdTitle only escapes the quote that delimits a Markdown image title', () => {
+  assert.equal(BadgeLogic.escMdTitle('reviewed for "accuracy"'), "reviewed for 'accuracy'");
+  assert.equal(BadgeLogic.escMdTitle('R&D <check>'), 'R&D <check>', 'not HTML-escaped, this is Markdown title syntax');
 });
 
 test('buildBadge composes url/docHref/altText, and folds a note into titleText only', () => {

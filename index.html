@@ -168,6 +168,14 @@
     color: var(--fg);
     margin-bottom: 0.75rem;
   }
+  input.text-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--fg);
+  }
   .split-col { margin-bottom: 0.75rem; }
   .split-col label.field-label {
     display: block;
@@ -275,8 +283,7 @@
     controlled vocabulary &mdash; it's a plain-language note carried in the
     badge's title/alt text, not a new disclosure category.
   </p>
-  <input type="text" id="roleNote" maxlength="120" placeholder="e.g. human directed architecture, rejected first draft; AI implemented"
-    style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
+  <input type="text" id="roleNote" class="text-input" maxlength="120" placeholder="e.g. human directed architecture, rejected first draft; AI implemented">
 </fieldset>
 
 <fieldset id="metaFields" hidden>
@@ -290,18 +297,15 @@
   </p>
   <div class="split-col">
     <label class="field-label" for="aiModel">AI model</label>
-    <input type="text" id="aiModel" maxlength="80" placeholder="e.g. Claude Opus 5"
-      style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
+    <input type="text" id="aiModel" class="text-input" maxlength="80" placeholder="e.g. Claude Opus 5">
   </div>
   <div class="split-col">
     <label class="field-label" for="aiProvider">AI provider</label>
-    <input type="text" id="aiProvider" maxlength="80" placeholder="e.g. Anthropic"
-      style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
+    <input type="text" id="aiProvider" class="text-input" maxlength="80" placeholder="e.g. Anthropic">
   </div>
   <div class="split-col">
     <label class="field-label" for="aiPromptUrl">Prompt/methodology URL</label>
-    <input type="url" id="aiPromptUrl" maxlength="300" placeholder="https://example.com/prompt-log"
-      style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
+    <input type="url" id="aiPromptUrl" class="text-input" maxlength="300" placeholder="https://example.com/prompt-log">
   </div>
 </fieldset>
 </div>
@@ -317,8 +321,7 @@
     <select id="descSelect" class="scope-select"></select>
   </div>
   <label class="field-label" for="splitNote">Optional note</label>
-  <input type="text" id="splitNote" maxlength="120" placeholder="e.g. code human-written; description AI-drafted from human-directed outline"
-    style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
+  <input type="text" id="splitNote" class="text-input" maxlength="120" placeholder="e.g. code human-written; description AI-drafted from human-directed outline">
   <p class="note">
     Two badges, one for each half, meant to sit next to each other with no
     gap. Not part of the W3C vocabulary itself &mdash; each half still cites
@@ -326,9 +329,9 @@
   </p>
 </fieldset>
 
-<section id="result" hidden aria-live="polite">
+<section id="result" hidden>
   <h2>Your badge</h2>
-  <div id="badgePreview"></div>
+  <div id="badgePreview" aria-live="polite"></div>
   <div class="snippet-row">
     <label for="mdSnippet">Markdown</label>
     <div class="snippet-wrap">
@@ -502,7 +505,7 @@
     });
 
     document.getElementById('mdSnippet').value = badges.map(function (b) {
-      return '[![' + b.altText + '](' + b.url + ' "' + b.titleText.replace(/"/g, "'") + '")](' + b.docHref + ')';
+      return '[![' + b.altText + '](' + b.url + ' "' + BadgeLogic.escMdTitle(b.titleText) + '")](' + b.docHref + ')';
     }).join('');
 
     document.getElementById('htmlSnippet').value = badges.map(function (b) {
@@ -538,30 +541,26 @@
     }
 
     var value = BadgeLogic.ladderResult(ladderAnswers);
-    var showMeta = !!value && value.key !== 'human-only';
+    // metaFields is hidden for human-only purely as a UI nudge (don't
+    // invite input the spec says shouldn't apply); buildWholeMarkup is the
+    // actual enforcement, dropping these fields for human-only regardless
+    // of what's passed in — including stale values left over from before
+    // a Back-button answer change. No need to re-gate here too.
     document.getElementById('noteField').hidden = !value;
-    document.getElementById('metaFields').hidden = !showMeta;
+    document.getElementById('metaFields').hidden = !value || value.key === 'human-only';
     if (!value) { result.hidden = true; return; }
 
     var wholeNote = document.getElementById('roleNote').value.trim();
     renderBadges([BadgeLogic.buildBadge('AI Disclosure', value, wholeNote)]);
-    // The spec says ai-model/ai-provider/ai-prompt-url SHOULD NOT be present
-    // alongside ai-disclosure="human-only" — force them empty here rather
-    // than trusting the fieldset's hidden state, since stale input values
-    // survive a Back-button answer change to human-only.
-    var model = showMeta ? document.getElementById('aiModel').value.trim() : '';
-    var provider = showMeta ? document.getElementById('aiProvider').value.trim() : '';
-    var promptUrl = showMeta ? document.getElementById('aiPromptUrl').value.trim() : '';
+    var model = document.getElementById('aiModel').value.trim();
+    var provider = document.getElementById('aiProvider').value.trim();
+    var promptUrl = document.getElementById('aiPromptUrl').value.trim();
     document.getElementById('markupSnippet').value = BadgeLogic.buildWholeMarkup(value, model, provider, promptUrl);
     result.hidden = false;
   }
 
   document.addEventListener('change', render);
-  document.getElementById('roleNote').addEventListener('input', render);
-  document.getElementById('splitNote').addEventListener('input', render);
-  document.getElementById('aiModel').addEventListener('input', render);
-  document.getElementById('aiProvider').addEventListener('input', render);
-  document.getElementById('aiPromptUrl').addEventListener('input', render);
+  document.addEventListener('input', render);
 
   function showCopied(btn, originalText, originalLabel) {
     btn.textContent = 'Copied';

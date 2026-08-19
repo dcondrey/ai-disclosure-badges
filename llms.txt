@@ -12,8 +12,8 @@ picking the right one.
 
 ## Primary pages
 
-- [Generator](https://dcondrey.github.io/ai-disclosure-badges/): the interactive question-ladder tool. Requires JavaScript.
-- [README](https://github.com/dcondrey/ai-disclosure-badges#readme): manual badge markdown for all three values, for anyone who doesn't want to use the generator.
+- [Generator](https://dcondrey.github.io/ai-disclosure-badges/): the interactive question-ladder tool. Requires JavaScript. Alongside the badge Markdown/HTML, it also outputs the actual spec-defined markup — `<meta name="ai-disclosure" content="...">` and the equivalent `ai-disclosure="..."` element attribute, with optional `ai-model` / `ai-provider` / `ai-prompt-url` fields — for disclosing AI involvement in HTML content directly rather than via a README/PR badge.
+- [README](https://github.com/dcondrey/ai-disclosure-badges): manual badge markdown for all three values, for anyone who doesn't want to use the generator.
 
 ## Vocabulary reference
 

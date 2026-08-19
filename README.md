@@ -128,7 +128,7 @@ verdict rather than a neutral disclosure:
 - **`ai-autonomous`** — violet (`#6C4EAF`).
 - **`ai-assisted`** — neutral gray (`#6B7280`), off the terracotta/violet
   spectrum entirely, since the badge no longer states a degree — see
-  `colorFor()` in [`index.html`](index.html). (This used to shift along a
+  `colorFor()` in [`badge-logic.js`](badge-logic.js). (This used to shift along a
   terracotta-to-violet gradient keyed to an AI-authorship percentage; that
   percentage was dropped — see
   [docs/ai-assisted.md § The retired percentage proposal](docs/ai-assisted.md#the-retired-percentage-proposal).)

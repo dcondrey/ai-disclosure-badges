@@ -1,8 +1,8 @@
 # Contributing to AI Disclosure Badges
 
-This is a small, single-purpose repo: three explainer docs, one static
-generator page, and a README. Contributions are welcome; here's how they
-tend to break down.
+This is a small, single-purpose repo: three explainer docs, a static
+generator page backed by a small tested logic module, and a README.
+Contributions are welcome; here's how they tend to break down.
 
 ## Ways you can help
 

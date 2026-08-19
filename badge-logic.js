@@ -63,12 +63,21 @@ var BadgeLogic = (function () {
     return 'ai-disclosure="' + value.key + '"';
   }
 
+  // Single source of truth for the three optional metadata fields, so the
+  // <meta> tags and the element-attribute form can't drift on which fields
+  // they emit.
+  function optionalMetaFields(model, provider, promptUrl) {
+    var fields = [];
+    if (model) fields.push(['ai-model', model]);
+    if (provider) fields.push(['ai-provider', provider]);
+    if (promptUrl) fields.push(['ai-prompt-url', promptUrl]);
+    return fields;
+  }
+
   function metaAttrs(model, provider, promptUrl) {
-    var attrs = [];
-    if (model) attrs.push('ai-model="' + escAttr(model) + '"');
-    if (provider) attrs.push('ai-provider="' + escAttr(provider) + '"');
-    if (promptUrl) attrs.push('ai-prompt-url="' + escAttr(promptUrl) + '"');
-    return attrs.length ? ' ' + attrs.join(' ') : '';
+    var fields = optionalMetaFields(model, provider, promptUrl);
+    if (!fields.length) return '';
+    return ' ' + fields.map(function (f) { return f[0] + '="' + escAttr(f[1]) + '"'; }).join(' ');
   }
 
   function buildWholeMarkup(value, model, provider, promptUrl) {
@@ -78,9 +87,11 @@ var BadgeLogic = (function () {
     // emit contradictory markup even if a caller forgets to gate.
     var allowMeta = value.key !== 'human-only';
     var lines = ['<meta name="ai-disclosure" content="' + value.key + '">'];
-    if (allowMeta && model) lines.push('<meta name="ai-model" content="' + escAttr(model) + '">');
-    if (allowMeta && provider) lines.push('<meta name="ai-provider" content="' + escAttr(provider) + '">');
-    if (allowMeta && promptUrl) lines.push('<meta name="ai-prompt-url" content="' + escAttr(promptUrl) + '">');
+    if (allowMeta) {
+      optionalMetaFields(model, provider, promptUrl).forEach(function (f) {
+        lines.push('<meta name="' + f[0] + '" content="' + escAttr(f[1]) + '">');
+      });
+    }
     lines.push('');
     lines.push('<!-- or scoped to one element instead of the whole page: -->');
     lines.push('<div ' + discloseAttrs(value) + (allowMeta ? metaAttrs(model, provider, promptUrl) : '') + '>...</div>');
@@ -88,13 +99,27 @@ var BadgeLogic = (function () {
   }
 
   function buildSplitMarkup(codeVal, descVal) {
-    return [
-      '<!-- code and description disagree, so the page-level default is "mixed" -->',
-      '<meta name="ai-disclosure" content="mixed">',
-      '',
-      '<pre ' + discloseAttrs(codeVal) + '>...code...</pre>',
-      '<p ' + discloseAttrs(descVal) + '>...description...</p>'
-    ].join('\n');
+    // mixed only means something when the two halves actually differ —
+    // if they agree, a single page-level default is the true, correct
+    // statement (and the spec-honest one).
+    var agree = codeVal.key === descVal.key;
+    var lines = agree
+      ? ['<meta name="ai-disclosure" content="' + codeVal.key + '">']
+      : [
+          '<!-- code and description disagree, so the page-level default is "mixed" -->',
+          '<meta name="ai-disclosure" content="mixed">'
+        ];
+    lines.push('');
+    lines.push('<pre ' + discloseAttrs(codeVal) + '>...code...</pre>');
+    lines.push('<p ' + discloseAttrs(descVal) + '>...description...</p>');
+    return lines.join('\n');
+  }
+
+  function escMdTitle(s) {
+    // Markdown image-title syntax only needs its delimiter quote handled,
+    // not full HTML-attribute escaping — this is deliberately different
+    // from escAttr(), not an inconsistency.
+    return String(s).replace(/"/g, "'");
   }
 
   function buildBadge(label, value, note) {
@@ -116,9 +141,11 @@ var BadgeLogic = (function () {
     LADDER_TERMINAL: LADDER_TERMINAL,
     ladderResult: ladderResult,
     escAttr: escAttr,
+    escMdTitle: escMdTitle,
     shieldsSegment: shieldsSegment,
     shieldsUrl: shieldsUrl,
     discloseAttrs: discloseAttrs,
+    optionalMetaFields: optionalMetaFields,
     metaAttrs: metaAttrs,
     buildWholeMarkup: buildWholeMarkup,
     buildSplitMarkup: buildSplitMarkup,
