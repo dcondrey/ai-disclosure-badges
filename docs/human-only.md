@@ -46,3 +46,7 @@ Content Disclosure Community Group, not by this project. See the
 [specification](https://w3c-cg.github.io/ai-content-disclosure/) and its
 [repository](https://github.com/w3c-cg/ai-content-disclosure) for the
 normative definitions.
+
+The spec is currently an early working draft with no version number of its
+own, so quotes on this page reflect the spec text as fetched 2026-08-18.
+Check the spec repository directly if you need the current text.

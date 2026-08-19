@@ -2,8 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square"></a>
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted (~25%)" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~25%25)-B16362?style=flat-square"></a>
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted (~75%)" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-835596?style=flat-square"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square"></a>
   <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md"><img alt="AI Disclosure: ai-autonomous" src="https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square"></a>
 </p>
 
@@ -22,6 +21,7 @@ This repo hosts:
 - The [badge generator](index.html) — a static, dependency-free question flow
 - The [explainer docs](#what-each-badge-means) each badge links to
 - The [color and split-badge conventions](#colors) used to build them
+- The [spec-conformant markup](#or-just-copy-the-markup) each badge stands in for
 
 [spec]: https://w3c-cg.github.io/ai-content-disclosure/
 [spec-repo]: https://github.com/w3c-cg/ai-content-disclosure
@@ -45,6 +45,14 @@ server needed. Answer a few short questions; it picks the matching badge and
 gives you Markdown and HTML snippets to paste, no need to know the
 vocabulary or pick a category yourself.
 
+Alongside the badge snippets, the generator also outputs the actual
+spec-defined markup — `<meta name="ai-disclosure" content="...">` and the
+equivalent `ai-disclosure="..."` element attribute, with optional
+`ai-model` / `ai-provider` / `ai-prompt-url` fields folded in. The badge is
+this project's convention for a README or PR; the markup snippet is what
+the [specification][spec] itself actually defines — use it when what you're
+disclosing is HTML content rather than a README/PR body.
+
 ## Or just copy the markdown
 
 **`human-only`**
@@ -54,19 +62,18 @@ vocabulary or pick a category yourself.
 [![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
 ```
 
-**`ai-assisted`** (no percentage stated)
+**`ai-assisted`**
 
 [![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```markdown
 [![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
-**`ai-assisted`, with the optional percentage** ([`ai-assisted-percent`](https://w3c-cg.github.io/ai-content-disclosure/#ai-assisted-percent), currently a proposal under discussion in the spec). The color shifts from `human-only`'s terracotta toward `ai-autonomous`'s violet as the stated AI share increases — see [Colors](#colors).
-
-[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-835596?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
-```markdown
-[![AI Disclosure: ai-assisted (~75%)](https://img.shields.io/badge/AI_Disclosure-ai--assisted_(~75%25)-835596?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
-```
+This project previously offered an optional AI-authorship percentage on
+this badge, mirroring the spec's `ai-assisted-percent` proposal. That's
+been dropped — see
+[docs/ai-assisted.md § The retired percentage proposal](docs/ai-assisted.md#the-retired-percentage-proposal)
+for why.
 
 **`ai-autonomous`**
 
@@ -74,6 +81,41 @@ vocabulary or pick a category yourself.
 ```markdown
 [![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
 ```
+
+## Or just copy the markup
+
+The badges above are this project's own convention for a README or PR. If
+what you're marking up is HTML content instead, use the spec's own markup
+directly — a page-level default via `<meta>`, or scoped to one element via
+the `ai-disclosure` attribute:
+
+```html
+<meta name="ai-disclosure" content="human-only">
+```
+```html
+<meta name="ai-disclosure" content="ai-assisted">
+```
+```html
+<meta name="ai-disclosure" content="ai-autonomous">
+```
+
+Or scoped to one element, with the optional metadata attributes filled in:
+
+```html
+<article ai-disclosure="ai-assisted" ai-model="claude-opus-5" ai-provider="Anthropic">
+  ...
+</article>
+```
+
+`ai-model` / `ai-provider` / `ai-prompt-url` are valid alongside
+`ai-assisted` or `ai-autonomous` — see
+[docs/ai-assisted.md § Optional metadata attributes](docs/ai-assisted.md#optional-metadata-attributes).
+They **should not** appear alongside `human-only`, per spec — asserting no
+AI was involved while also citing an AI model would be self-contradictory.
+
+Content whose disclosure genuinely varies by section uses `mixed` as the
+page-level default instead of one of the three values above — see
+[Split badges](#split-badges-code-vs-description).
 
 ## Colors
 
@@ -84,35 +126,12 @@ verdict rather than a neutral disclosure:
 - **`human-only`** — terracotta (`#C86A49`), deliberately a material/nature
   color (clay, pottery), not a skin tone.
 - **`ai-autonomous`** — violet (`#6C4EAF`).
-- **`ai-assisted`** — spans the spectrum between those two colors, keyed to
-  the stated AI percentage: near-terracotta at a low percentage, near-violet
-  at a high one, so a barely-AI-touched piece reads visually close to
-  `human-only` and a heavily-AI-drafted one reads close to `ai-autonomous`.
-  A neutral gray (`#6B7280`), off the spectrum entirely, when no percentage
-  is given — so "unspecified" is never mistaken for a specific value like
-  ~50%. Computed by linear interpolation between the `human-only` and
-  `ai-autonomous` hex values — see `colorFor()` in [`index.html`](index.html).
-
-The generator offers percentage in 10% bands. The full range, terracotta to
-violet:
-
-[![10%](https://img.shields.io/badge/10%25-BF6753?style=flat-square)](docs/ai-assisted.md)[![20%](https://img.shields.io/badge/20%25-B6645D?style=flat-square)](docs/ai-assisted.md)[![30%](https://img.shields.io/badge/30%25-AC6268?style=flat-square)](docs/ai-assisted.md)[![40%](https://img.shields.io/badge/40%25-A35F72?style=flat-square)](docs/ai-assisted.md)[![50%](https://img.shields.io/badge/50%25-9A5C7C?style=flat-square)](docs/ai-assisted.md)[![60%](https://img.shields.io/badge/60%25-915986?style=flat-square)](docs/ai-assisted.md)[![70%](https://img.shields.io/badge/70%25-885690?style=flat-square)](docs/ai-assisted.md)[![80%](https://img.shields.io/badge/80%25-7E549B?style=flat-square)](docs/ai-assisted.md)[![90%](https://img.shields.io/badge/90%25-7551A5?style=flat-square)](docs/ai-assisted.md)[![100%](https://img.shields.io/badge/100%25-6C4EAF?style=flat-square)](docs/ai-assisted.md)
-
-Each band's color and what it roughly represents
-([full descriptions in `docs/ai-assisted.md`](docs/ai-assisted.md#illustrative-anchors-for-each-10-band)):
-
-| Band | Color |
-|---|---|
-| ~10% | `#BF6753` |
-| ~20% | `#B6645D` |
-| ~30% | `#AC6268` |
-| ~40% | `#A35F72` |
-| ~50% | `#9A5C7C` |
-| ~60% | `#915986` |
-| ~70% | `#885690` |
-| ~80% | `#7E549B` |
-| ~90% | `#7551A5` |
-| ~100% | `#6C4EAF` |
+- **`ai-assisted`** — neutral gray (`#6B7280`), off the terracotta/violet
+  spectrum entirely, since the badge no longer states a degree — see
+  `colorFor()` in [`index.html`](index.html). (This used to shift along a
+  terracotta-to-violet gradient keyed to an AI-authorship percentage; that
+  percentage was dropped — see
+  [docs/ai-assisted.md § The retired percentage proposal](docs/ai-assisted.md#the-retired-percentage-proposal).)
 
 ## Split badges (code vs. description)
 
@@ -121,15 +140,24 @@ code and the surrounding description genuinely differ — e.g. AI-drafted PR
 description summarizing human-written code — the generator can produce two
 adjacent badges instead of one, each citing its own value:
 
-[![Code: human-only](https://img.shields.io/badge/Code-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-835596?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![Code: human-only](https://img.shields.io/badge/Code-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted](https://img.shields.io/badge/Description-ai--assisted-6B7280?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```markdown
-[![Code: human-only](https://img.shields.io/badge/Code-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted (~75%)](https://img.shields.io/badge/Description-ai--assisted_(~75%25)-835596?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![Code: human-only](https://img.shields.io/badge/Code-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted](https://img.shields.io/badge/Description-ai--assisted-6B7280?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
 No space between the two image links keeps them visually joined into one
 badge. This split is this project's own convention, not part of the W3C
 vocabulary — each half still only ever cites one of the three spec-defined
-values.
+values a badge can carry.
+
+The spec has its own answer to "this content doesn't have one disclosure
+value": a fourth value, `mixed`, valid only on the page-level
+`<meta name="ai-disclosure">` default, meaning no single value applies to
+the page as a whole. It's a different mechanism from this split — `mixed`
+says "no default; look at each part," while a split badge states two
+explicit values side by side. The [generator](index.html)'s spec-markup
+output uses `mixed` automatically when you pick different values for code
+and description.
 
 ## What each badge means
 

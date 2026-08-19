@@ -19,66 +19,51 @@ forces unanswerable questions about who counts as the first author. This
 badge inherits that same deliberate breadth — it does not by itself tell you
 whether the AI's role was a grammar pass or a full first draft.
 
-## The optional percentage
+## The retired percentage proposal
 
-If a percentage appears on this badge (e.g. "ai-assisted · ~50%"), it
-corresponds to the spec's optional
-[`ai-assisted-percent`](https://w3c-cg.github.io/ai-content-disclosure/#ai-assisted-percent)
-attribute: a rough, self-reported estimate of what share of the final
-content was AI-authored. The spec is explicit that this figure:
+Earlier versions of this badge supported an optional AI-authorship
+percentage, mirroring the spec's `ai-assisted-percent` proposal. As of the
+W3C CG's 2026-07-13 meeting, the group reached a working consensus against
+a numeric percentage — "a percent value gives a false sense of precision
+and has no well-defined numerator" — and against a coarser bucketed
+alternative (mostly-human / roughly-equal / mostly-AI) floated in the same
+discussion. The recorded outcome: no intensity sub-attribute, no research
+action for now. See
+[w3c-cg/ai-content-disclosure#25](https://github.com/w3c-cg/ai-content-disclosure/issues/25)
+for the issue and meeting minutes.
 
-- is **necessarily an estimate** — the specification does not define a
-  measurement procedure;
-- is **valid only** alongside `ai-assisted` (not `human-only` or
-  `ai-autonomous`);
-- is a **proposal still under discussion** at the specification level, not
-  yet finalized.
+This project's badges and generator no longer produce a percentage,
+tracking that consensus — a badge conforming as closely as possible to the
+spec shouldn't assert precision the spec's own working group has argued
+against. If the CG later finalizes some granularity mechanism, this doc and
+the generator will be updated to match.
 
-A badge without a percentage simply means no estimate was offered. Absence
-of a percentage is not itself meaningful and should not be read as "0% AI."
+## Optional metadata attributes
 
-Note that the percentage measures AI *authorship share*, not the presence or
-absence of human review. Content can be 100% AI-authored and still be
-`ai-assisted` rather than `ai-autonomous`, provided a human reviewed it
-before publication — the two axes (how much AI wrote vs. whether a human
-looked at it) are independent.
+Beyond `ai-disclosure` itself, the spec defines three optional attributes
+that MAY appear alongside it — unlike `ai-assisted-percent`, these are
+finalized, not proposals:
 
-## Illustrative anchors for each 10% band
+- **`ai-model`** — a free-form string identifying the AI model used (e.g.
+  `"claude-opus-5"`, `"gpt-4o"`).
+- **`ai-provider`** — a free-form string identifying the AI provider or
+  vendor (e.g. `"Anthropic"`, `"OpenAI"`).
+- **`ai-prompt-url`** — a URL pointing to documentation of the prompt or
+  methodology used. The spec is explicit that the prompt text itself must
+  not be embedded in the HTML; this attribute links out instead, so the
+  author keeps control over what's disclosed and can revoke access later.
 
-The spec deliberately declines to define a measurement procedure for
-`ai-assisted-percent` — see above. That means there is no formula that
-converts "what actually happened" into a number, and this project isn't
-attempting to supply one. What follows is **illustrative guidance, not a
-rule**: rough anchors to help you pick a band, in the same spirit as the
-spec's own [boundary guidance](https://w3c-cg.github.io/ai-content-disclosure/#boundary-guidance)
-(examples on each side of a line, not a test you compute). Treat these as
-"if your situation looks roughly like this, this band is a reasonable
-pick," not as thresholds to satisfy exactly.
+All three are optional — the spec notes authors "may have legitimate
+reasons not to disclose specific tools or providers." They're valid
+alongside both `ai-assisted` and `ai-autonomous`, but the spec states they
+"SHOULD NOT be present when `ai-disclosure=\"human-only\"`" — asserting no
+AI was involved while also citing which AI model was used would be
+self-contradictory.
 
-The [generator](../index.html) implements this same progression as a
-ladder: starting from `human-only`, each row asks one yes/no question
-gating the next step up. Answer "no" and you stop at that row's badge;
-answer "yes" and you move one step closer to `ai-autonomous`. The table
-below is the same anchors, for reference outside the generator.
-
-| Band | Roughly looks like |
-|---|---|
-| ~10% | Human-written draft with an AI grammar/style pass (e.g. Grammarly-style). AI touched wording, not structure or ideas. |
-| ~20% | Human-written draft with AI help on a few sentences or one short section. |
-| ~30% | Human draft with AI-rewritten passages in several places (e.g. AI expanded a few bullet points into prose). |
-| ~40% | Human wrote the core argument/structure; AI contributed meaningful passages throughout, still a minority of the text. |
-| ~50% | Roughly even split — human and AI each produced about half the final text. |
-| ~60% | AI produced most passages from a human outline or prompts; human wrote some sections directly. |
-| ~70% | AI produced most of the draft from human prompts/outline; human substantively rewrote select sections. |
-| ~80% | AI produced nearly the entire draft; human made targeted edits or corrections to specific passages. |
-| ~90% | AI produced the entire draft; human's edits were light (fixing errors, minor wording) across most of the piece. |
-| ~100% | AI produced the entire draft; human review was a read-through/approval with no substantive edits. Still `ai-assisted`, not `ai-autonomous` — a human did review it before publication. |
-
-These anchors describe the *content*, not a workflow you must follow to
-qualify — arriving at, say, "human wrote a full draft, then had AI rewrite
-it entirely, then rewrote it back by hand" and landing near ~100% because
-that's what the *final text* looks like is a legitimate use of this table,
-even though the process looked nothing like the row's description.
+This project's [generator](../index.html) surfaces all three as optional
+fields when building its spec-markup snippet (not the badge itself —
+shields.io badges have no room for them, and hide these fields entirely
+once you've selected `human-only`).
 
 ## The optional human-involvement note
 
@@ -93,9 +78,9 @@ carried in the badge's `title`/`alt` text rather than its visible label. It
 covers both axes — depth of review ("reviewed for factual accuracy," "AI
 drafted, human rewrote throughout") and depth of direction ("human set
 requirements and rejected the first approach; AI implemented the
-revision"). **This note is not part of the W3C specification.** The spec
-defines only `ai-assisted-percent` as an optional refinement; it
-deliberately does not define a controlled vocabulary for the type of human
+revision"). **This note is not part of the W3C specification** — unlike the
+`ai-model` / `ai-provider` / `ai-prompt-url` attributes above, the spec
+defines no controlled vocabulary for the type or degree of human
 involvement. Treat any such note as informal color supplied by the badge's
 author, not as a citable disclosure value.
 
@@ -116,11 +101,10 @@ AI summarization, and AI-drafted-then-human-reviewed text all fall inside
   [C2PA](https://c2pa.org/).
 - **No AI-detection claim.** The claim is self-reported by the author, not
   detected or audited.
-- **No precision on the percentage.** Any percentage shown is a rough,
-  author-estimated figure with no defined measurement methodology behind
-  it — treat it as an order-of-magnitude signal, not a metric.
 - **No claim about which specific tool or model was used**, unless stated
-  separately alongside the badge.
+  separately via the optional `ai-model` / `ai-provider` / `ai-prompt-url`
+  attributes (see [above](#optional-metadata-attributes)) — the badge label
+  itself never carries this.
 
 ## Source of truth
 
@@ -129,3 +113,7 @@ Content Disclosure Community Group, not by this project. See the
 [specification](https://w3c-cg.github.io/ai-content-disclosure/) and its
 [repository](https://github.com/w3c-cg/ai-content-disclosure) for the
 normative definitions.
+
+The spec is currently an early working draft with no version number of its
+own, so quotes on this page reflect the spec text as fetched 2026-08-18.
+Check the spec repository directly if you need the current text.

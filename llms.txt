@@ -13,12 +13,12 @@ picking the right one.
 ## Primary pages
 
 - [Generator](https://dcondrey.github.io/ai-disclosure-badges/): the interactive question-ladder tool. Requires JavaScript.
-- [README](https://github.com/dcondrey/ai-disclosure-badges#readme): manual badge markdown for all three values plus the 10% ai-assisted gradient bands, for anyone who doesn't want to use the generator.
+- [README](https://github.com/dcondrey/ai-disclosure-badges#readme): manual badge markdown for all three values, for anyone who doesn't want to use the generator.
 
 ## Vocabulary reference
 
 - [human-only](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md): positive assertion that no generative AI was involved.
-- [ai-assisted](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md): AI involved alongside human authorship and/or review; includes the optional ai-assisted-percent figure and per-decile illustrative anchors.
+- [ai-assisted](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md): AI involved alongside human authorship and/or review. Previously offered an optional AI-authorship percentage; dropped after the W3C CG reached a working consensus against it (2026-07-13) — see the doc's "retired percentage proposal" section.
 - [ai-autonomous](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md): published without per-instance human involvement or review.
 
 ## What none of these badges assert

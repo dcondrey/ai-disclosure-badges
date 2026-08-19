@@ -4,8 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Disclosure Badge Generator</title>
-<meta name="description" content="Pick the human-only, ai-assisted, or ai-autonomous badge for a PR, commit, or doc by answering a short yes/no ladder — no need to already know the W3C AI Content Disclosure vocabulary.">
+<meta name="description" content="Pick the human-only, ai-assisted, or ai-autonomous badge for a PR, commit, or doc with a short yes/no ladder — no vocabulary knowledge needed.">
 <meta name="robots" content="index, follow">
+<!-- Dogfooding this page's own vocabulary. No ai-assisted-percent: -->
+<!-- this project dropped it, see docs/ai-assisted.md. -->
+<meta name="ai-disclosure" content="ai-assisted">
 <link rel="canonical" href="https://dcondrey.github.io/ai-disclosure-badges/">
 <link rel="preconnect" href="https://img.shields.io" crossorigin>
 <link rel="dns-prefetch" href="https://img.shields.io">
@@ -18,11 +21,11 @@
 <meta property="og:title" content="AI Disclosure Badge Generator">
 <meta property="og:description" content="Pick the human-only, ai-assisted, or ai-autonomous badge by answering a short yes/no ladder, grounded in the W3C AI Content Disclosure vocabulary.">
 <meta property="og:url" content="https://dcondrey.github.io/ai-disclosure-badges/">
-<meta property="og:image" content="https://img.shields.io/badge/AI_Disclosure-ai--assisted-9A5C7C?style=for-the-badge">
+<meta property="og:image" content="https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=for-the-badge">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AI Disclosure Badge Generator">
 <meta name="twitter:description" content="Pick the human-only, ai-assisted, or ai-autonomous badge by answering a short yes/no ladder.">
-<meta name="twitter:image" content="https://img.shields.io/badge/AI_Disclosure-ai--assisted-9A5C7C?style=for-the-badge">
+<meta name="twitter:image" content="https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=for-the-badge">
 
 <script type="application/ld+json">
 {
@@ -192,6 +195,7 @@
     resize: none;
     height: 3.2em;
   }
+  textarea.snippet.markup { height: 8em; }
   button.copy {
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -274,6 +278,32 @@
   <input type="text" id="roleNote" maxlength="120" placeholder="e.g. human directed architecture, rejected first draft; AI implemented"
     style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
 </fieldset>
+
+<fieldset id="metaFields" hidden>
+  <legend>Optional markup metadata</legend>
+  <p class="note">
+    These three <strong>are</strong> part of the W3C specification (optional
+    attributes alongside <code>ai-disclosure</code>) &mdash; unlike the
+    free-text note above. Leave any blank to omit it. Not shown for
+    <code>human-only</code>: the spec says they &quot;SHOULD NOT be present
+    when <code>ai-disclosure="human-only"</code>.&quot;
+  </p>
+  <div class="split-col">
+    <label class="field-label" for="aiModel">AI model</label>
+    <input type="text" id="aiModel" maxlength="80" placeholder="e.g. Claude Opus 5"
+      style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
+  </div>
+  <div class="split-col">
+    <label class="field-label" for="aiProvider">AI provider</label>
+    <input type="text" id="aiProvider" maxlength="80" placeholder="e.g. Anthropic"
+      style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
+  </div>
+  <div class="split-col">
+    <label class="field-label" for="aiPromptUrl">Prompt/methodology URL</label>
+    <input type="url" id="aiPromptUrl" maxlength="300" placeholder="https://example.com/prompt-log"
+      style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--fg);">
+  </div>
+</fieldset>
 </div>
 
 <fieldset id="splitFlow" hidden>
@@ -313,6 +343,20 @@
       <button class="copy" data-target="htmlSnippet" aria-label="Copy HTML snippet">Copy</button>
     </div>
   </div>
+  <div class="snippet-row">
+    <label for="markupSnippet">Spec markup (<code>ai-disclosure</code>)</label>
+    <div class="snippet-wrap">
+      <textarea id="markupSnippet" class="snippet markup" readonly></textarea>
+      <button class="copy" data-target="markupSnippet" aria-label="Copy spec markup snippet">Copy</button>
+    </div>
+  </div>
+  <p class="note">
+    The badges above are this project's own convention for surfacing a
+    disclosure in a README or PR. This is what the
+    <a class="explainer" href="https://w3c-cg.github.io/ai-content-disclosure/">specification</a>
+    itself actually defines &mdash; use it if what you're marking up is HTML
+    content rather than a README/PR body.
+  </p>
   <p class="note" id="explainerNote"></p>
 </section>
 </main>
@@ -321,60 +365,14 @@
   Independent reference implementation. The disclosure vocabulary is
   defined by the
   <a href="https://github.com/w3c-cg/ai-content-disclosure">W3C AI Content Disclosure Community Group</a>,
-  not by this project. See the <a href="https://github.com/dcondrey/ai-disclosure-badges#readme">README</a> for manual badge markdown.
+  not by this project. See the <a href="https://github.com/dcondrey/ai-disclosure-badges">README</a> for manual badge markdown.
 </footer>
 
+<script src="badge-logic.js"></script>
 <script>
 (function () {
-  var HUMAN_ONLY_COLOR = 'C86A49';
-  var AI_AUTONOMOUS_COLOR = '6C4EAF';
-  var AI_ASSISTED_DEFAULT_COLOR = '6B7280';
-
-  function hexToRgb(hex) {
-    return { r: parseInt(hex.slice(0, 2), 16), g: parseInt(hex.slice(2, 4), 16), b: parseInt(hex.slice(4, 6), 16) };
-  }
-
-  var GRADIENT_START = hexToRgb(HUMAN_ONLY_COLOR);
-  var GRADIENT_END = hexToRgb(AI_AUTONOMOUS_COLOR);
-
-  function lerpHex(t) {
-    function ch(c) {
-      var v = Math.round(GRADIENT_START[c] + (GRADIENT_END[c] - GRADIENT_START[c]) * t);
-      return ('0' + v.toString(16)).slice(-2);
-    }
-    return (ch('r') + ch('g') + ch('b')).toUpperCase();
-  }
-
-  function colorFor(key, percent) {
-    if (key === 'human-only') return HUMAN_ONLY_COLOR;
-    if (key === 'ai-autonomous') return AI_AUTONOMOUS_COLOR;
-    if (!percent) return AI_ASSISTED_DEFAULT_COLOR;
-    return lerpHex(Math.min(100, Math.max(0, percent)) / 100);
-  }
-
-  var REPO_BASE = 'https://github.com/dcondrey/ai-disclosure-badges/blob/main/';
-  var DOC = { 'human-only': REPO_BASE + 'docs/human-only.md', 'ai-assisted': REPO_BASE + 'docs/ai-assisted.md', 'ai-autonomous': REPO_BASE + 'docs/ai-autonomous.md' };
-
-  function shieldsSegment(text) {
-    return encodeURIComponent(String(text).replace(/-/g, '--').replace(/ /g, '_'));
-  }
-
-  function shieldsUrl(label, message, color) {
-    return 'https://img.shields.io/badge/' + shieldsSegment(label) + '-' + shieldsSegment(message) + '-' + color + '?style=flat-square';
-  }
-
-  var SELECT_OPTIONS = [
-    { value: 'human-only', key: 'human-only', message: 'human-only', percent: null, text: 'human-only' },
-    { value: 'ai-assisted', key: 'ai-assisted', message: 'ai-assisted', percent: null, text: 'ai-assisted' }
-  ];
-  for (var p = 10; p <= 100; p += 10) {
-    var msg = 'ai-assisted (~' + p + '%)';
-    SELECT_OPTIONS.push({ value: 'ai-assisted-' + p, key: 'ai-assisted', message: msg, percent: p, text: msg });
-  }
-  SELECT_OPTIONS.push({ value: 'ai-autonomous', key: 'ai-autonomous', message: 'ai-autonomous', percent: null, text: 'ai-autonomous' });
-
   [document.getElementById('codeSelect'), document.getElementById('descSelect')].forEach(function (sel) {
-    SELECT_OPTIONS.forEach(function (opt) {
+    BadgeLogic.SELECT_OPTIONS.forEach(function (opt) {
       var el = document.createElement('option');
       el.value = opt.value;
       el.textContent = opt.text;
@@ -382,41 +380,7 @@
     });
   });
 
-  var LADDER = [
-    { key: 'human-only', message: 'human-only', percent: null,
-      question: 'Was any generative AI involved in producing this content? Generative AI means a system trained on data that produces novel output through inference — deterministic tools (spell-check, thesauri, search, calculators, templating, sensor readings, rule engines) don’t count.' },
-    { key: 'ai-assisted', message: 'ai-assisted (~10%)', percent: 10,
-      question: 'Did AI do more than a light copyedit or grammar pass — did it also rewrite or contribute wording/ideas in at least a few sentences or a short section?' },
-    { key: 'ai-assisted', message: 'ai-assisted (~20%)', percent: 20,
-      question: 'Did AI’s contribution extend beyond a few sentences or one section — to multiple passages or sections throughout the piece?' },
-    { key: 'ai-assisted', message: 'ai-assisted (~30%)', percent: 30,
-      question: 'Is AI’s contribution now a substantial minority of the final text (roughly a third to just under half), not just isolated passages?' },
-    { key: 'ai-assisted', message: 'ai-assisted (~40%)', percent: 40,
-      question: 'Is it roughly an even split — did AI produce about as much of the final text as the human did?' },
-    { key: 'ai-assisted', message: 'ai-assisted (~50%)', percent: 50,
-      question: 'Did AI produce more of the final text than the human did?' },
-    { key: 'ai-assisted', message: 'ai-assisted (~60%)', percent: 60,
-      question: 'Did AI produce most of the draft (roughly two-thirds or more), with human contribution limited to an outline/prompts plus substantive rewrites of a few sections?' },
-    { key: 'ai-assisted', message: 'ai-assisted (~70%)', percent: 70,
-      question: 'Did AI produce nearly the entire draft, with human involvement limited to targeted edits or corrections rather than writing sections?' },
-    { key: 'ai-assisted', message: 'ai-assisted (~80%)', percent: 80,
-      question: 'Were the human’s edits light — fixing errors and minor wording — rather than substantive rewriting?' },
-    { key: 'ai-assisted', message: 'ai-assisted (~90%)', percent: 90,
-      question: 'Did the human’s involvement amount to no more than a read-through or approval, with no edits at all?' },
-    { key: 'ai-assisted', message: 'ai-assisted (~100%)', percent: 100,
-      question: 'Was there truly zero human review before publication — not even a read-through?' }
-  ];
-  var LADDER_TERMINAL = { key: 'ai-autonomous', message: 'ai-autonomous', percent: null };
-
   var ladderAnswers = [];
-
-  function ladderResult() {
-    for (var i = 0; i < LADDER.length; i++) {
-      if (ladderAnswers[i] === undefined) return null;
-      if (ladderAnswers[i] === 'no') return LADDER[i];
-    }
-    return LADDER_TERMINAL;
-  }
 
   function goBack() {
     ladderAnswers = ladderAnswers.slice(0, ladderAnswers.length - 1);
@@ -431,7 +395,7 @@
     container.innerHTML = '';
 
     var stopped = ladderAnswers.length > 0 && ladderAnswers[ladderAnswers.length - 1] === 'no';
-    var terminalReached = ladderAnswers.length === LADDER.length && ladderAnswers[LADDER.length - 1] === 'yes';
+    var terminalReached = ladderAnswers.length === BadgeLogic.LADDER.length && ladderAnswers[BadgeLogic.LADDER.length - 1] === 'yes';
 
     if (stopped || terminalReached) {
       var summary = document.createElement('p');
@@ -440,14 +404,14 @@
       container.appendChild(summary);
     } else {
       var i = ladderAnswers.length;
-      var row = LADDER[i];
-      var badge = buildBadge('AI Disclosure', row, null);
+      var row = BadgeLogic.LADDER[i];
+      var badge = BadgeLogic.buildBadge('AI Disclosure', row, null);
       var fs = document.createElement('fieldset');
       fs.className = 'ladder-row';
 
       var progress = document.createElement('p');
       progress.className = 'note ladder-progress';
-      progress.textContent = 'Question ' + (i + 1) + ' of up to ' + LADDER.length;
+      progress.textContent = 'Question ' + (i + 1) + ' of up to ' + BadgeLogic.LADDER.length;
       container.appendChild(progress);
 
       var legend = document.createElement('legend');
@@ -508,7 +472,7 @@
     // document-level 'change' listener) has finished updating visibility.
     setTimeout(function () {
       var nextRadio = document.querySelector('#ladder input[type=radio]');
-      if (answer === 'yes' && idx + 1 < LADDER.length && nextRadio) {
+      if (answer === 'yes' && idx + 1 < BadgeLogic.LADDER.length && nextRadio) {
         nextRadio.focus();
       } else if (!document.getElementById('noteField').hidden) {
         document.getElementById('roleNote').focus();
@@ -520,18 +484,10 @@
 
   function selectValue(selectId) {
     var sel = document.getElementById(selectId);
-    for (var i = 0; i < SELECT_OPTIONS.length; i++) {
-      if (SELECT_OPTIONS[i].value === sel.value) return SELECT_OPTIONS[i];
+    for (var i = 0; i < BadgeLogic.SELECT_OPTIONS.length; i++) {
+      if (BadgeLogic.SELECT_OPTIONS[i].value === sel.value) return BadgeLogic.SELECT_OPTIONS[i];
     }
-    return SELECT_OPTIONS[0];
-  }
-
-  function buildBadge(label, value, note) {
-    var url = shieldsUrl(label, value.message, colorFor(value.key, value.percent));
-    var docHref = DOC[value.key];
-    var altText = label + ': ' + value.message;
-    var titleText = note ? altText + ' — ' + note + ' (non-normative note)' : altText;
-    return { url: url, docHref: docHref, altText: altText, titleText: titleText };
+    return BadgeLogic.SELECT_OPTIONS[0];
   }
 
   function renderBadges(badges) {
@@ -550,7 +506,7 @@
     }).join('');
 
     document.getElementById('htmlSnippet').value = badges.map(function (b) {
-      return '<a href="' + b.docHref + '" title="' + b.titleText.replace(/"/g, '&quot;') + '"><img src="' + b.url + '" alt="' + b.altText + '"></a>';
+      return '<a href="' + b.docHref + '" title="' + BadgeLogic.escAttr(b.titleText) + '"><img src="' + b.url + '" alt="' + BadgeLogic.escAttr(b.altText) + '"></a>';
     }).join('');
 
     var links = badges.map(function (b) {
@@ -573,25 +529,39 @@
       var descVal = selectValue('descSelect');
       var note = document.getElementById('splitNote').value.trim();
       renderBadges([
-        buildBadge('Code', codeVal, note),
-        buildBadge('Description', descVal, note)
+        BadgeLogic.buildBadge('Code', codeVal, note),
+        BadgeLogic.buildBadge('Description', descVal, note)
       ]);
+      document.getElementById('markupSnippet').value = BadgeLogic.buildSplitMarkup(codeVal, descVal);
       result.hidden = false;
       return;
     }
 
-    var value = ladderResult();
+    var value = BadgeLogic.ladderResult(ladderAnswers);
+    var showMeta = !!value && value.key !== 'human-only';
     document.getElementById('noteField').hidden = !value;
+    document.getElementById('metaFields').hidden = !showMeta;
     if (!value) { result.hidden = true; return; }
 
     var wholeNote = document.getElementById('roleNote').value.trim();
-    renderBadges([buildBadge('AI Disclosure', value, wholeNote)]);
+    renderBadges([BadgeLogic.buildBadge('AI Disclosure', value, wholeNote)]);
+    // The spec says ai-model/ai-provider/ai-prompt-url SHOULD NOT be present
+    // alongside ai-disclosure="human-only" — force them empty here rather
+    // than trusting the fieldset's hidden state, since stale input values
+    // survive a Back-button answer change to human-only.
+    var model = showMeta ? document.getElementById('aiModel').value.trim() : '';
+    var provider = showMeta ? document.getElementById('aiProvider').value.trim() : '';
+    var promptUrl = showMeta ? document.getElementById('aiPromptUrl').value.trim() : '';
+    document.getElementById('markupSnippet').value = BadgeLogic.buildWholeMarkup(value, model, provider, promptUrl);
     result.hidden = false;
   }
 
   document.addEventListener('change', render);
   document.getElementById('roleNote').addEventListener('input', render);
   document.getElementById('splitNote').addEventListener('input', render);
+  document.getElementById('aiModel').addEventListener('input', render);
+  document.getElementById('aiProvider').addEventListener('input', render);
+  document.getElementById('aiPromptUrl').addEventListener('input', render);
 
   function showCopied(btn, originalText, originalLabel) {
     btn.textContent = 'Copied';

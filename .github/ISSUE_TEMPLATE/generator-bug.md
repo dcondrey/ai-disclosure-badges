@@ -6,7 +6,7 @@ labels: bug
 assignees: ''
 ---
 
-**What did you select in the generator?** (scope, answers to each question, any percentage/note)
+**What did you select in the generator?** (scope, answers to each question, any note/model/provider/prompt URL)
 
 **What badge or snippet did it produce?**
 

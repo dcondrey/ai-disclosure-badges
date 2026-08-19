@@ -27,14 +27,26 @@ section for the full list.
   [C2PA](https://c2pa.org/).
 - **No AI-detection claim.** The claim is self-reported by whoever deployed
   the system, not detected or audited.
-- **No percentage.** The optional `ai-assisted-percent` attribute is valid
-  only alongside `ai-assisted`; it does not apply here and should not appear
-  on this badge. A badge claiming `ai-autonomous` is, by definition, 100%
-  AI-produced with no human authorship step to measure against.
+- **No percentage.** This project's badges don't state one at all anymore
+  (see [`ai-assisted`'s retired percentage proposal](ai-assisted.md#the-retired-percentage-proposal)),
+  and the spec's proposed `ai-assisted-percent` was never valid alongside
+  `ai-autonomous` in the first place — a badge claiming `ai-autonomous` is,
+  by definition, 100% AI-produced with no human authorship step to measure
+  against.
 - **No claim about content quality, accuracy, or oversight after the fact.**
   "No per-instance review before publication" does not mean the system or
   its outputs are never audited at all — only that no human reviewed this
   specific piece before it went out.
+
+## Optional metadata attributes
+
+The spec's `ai-model`, `ai-provider`, and `ai-prompt-url` attributes are
+valid alongside `ai-autonomous` too — see
+[`ai-assisted`'s optional metadata attributes section](ai-assisted.md#optional-metadata-attributes)
+for what each means. Unlike `human-only`, there's no contradiction in
+naming a model here: `ai-autonomous` already asserts the content is
+entirely AI-produced, so citing which AI produced it is consistent, not
+redundant.
 
 ## Source of truth
 
@@ -43,3 +55,7 @@ Content Disclosure Community Group, not by this project. See the
 [specification](https://w3c-cg.github.io/ai-content-disclosure/) and its
 [repository](https://github.com/w3c-cg/ai-content-disclosure) for the
 normative definitions.
+
+The spec is currently an early working draft with no version number of its
+own, so quotes on this page reflect the spec text as fetched 2026-08-18.
+Check the spec repository directly if you need the current text.

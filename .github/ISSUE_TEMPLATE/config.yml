@@ -2,4 +2,4 @@ blank_issues_enabled: true
 contact_links:
   - name: Vocabulary or spec question
     url: https://github.com/w3c-cg/ai-content-disclosure/issues
-    about: human-only / ai-assisted / ai-autonomous and ai-assisted-percent are defined upstream, not in this repo.
+    about: human-only / ai-assisted / ai-autonomous / mixed are defined upstream, not in this repo.
