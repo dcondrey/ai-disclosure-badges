@@ -6,8 +6,8 @@
 var BadgeLogic = require('../badge-logic.js');
 
 // The three badge values plus the spec's page-level-only "mixed" default
-// (not exported by badge-logic.js since it's markup-only, never a badge).
-var VALUES = BadgeLogic.SELECT_OPTIONS.map(function (o) { return o.key; }).concat('mixed');
+// (not in SELECT_OPTIONS since it's markup-only, never a badge on its own).
+var VALUES = BadgeLogic.SELECT_OPTIONS.map(function (o) { return o.key; }).concat(BadgeLogic.MIXED);
 
 var MARKER = '<!-- ai-disclosure-reminder -->';
 
@@ -17,9 +17,11 @@ function escapeRegExp(s) {
 
 var VALUES_ALT = VALUES.map(escapeRegExp).join('|');
 
-// A shields.io badge this project (or a compatible one) generated, e.g.
-// https://img.shields.io/badge/AI_Disclosure-human--only-C86A49
-var SHIELDS_RE = /img\.shields\.io\/badge\/(AI_Disclosure|Code|Description)-/i;
+// Matched by the value's shields.io message segment (via shieldsSegment,
+// the same function that built it), not by label text, so a label rename
+// in index.html can't silently break detection.
+var SHIELDS_VALUES_ALT = VALUES.map(function (v) { return escapeRegExp(BadgeLogic.shieldsSegment(v)); }).join('|');
+var SHIELDS_RE = new RegExp('img\\.shields\\.io/badge/[^/]+-(' + SHIELDS_VALUES_ALT + ')-', 'i');
 
 // The spec's own markup: the `ai-disclosure="..."` element attribute, or a
 // `<meta name="ai-disclosure" content="...">` tag, either attribute order.

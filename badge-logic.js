@@ -10,6 +10,11 @@ var BadgeLogic = (function () {
   var AI_AUTONOMOUS_COLOR = '6C4EAF';
   var AI_ASSISTED_COLOR = '6B7280';
 
+  // The spec's fourth value: valid only as the page-level <meta> default
+  // when a page's parts disclose differently (see buildSplitMarkup below).
+  // Not one of SELECT_OPTIONS since it's never a badge value on its own.
+  var MIXED = 'mixed';
+
   function colorFor(key) {
     if (key === 'human-only') return HUMAN_ONLY_COLOR;
     if (key === 'ai-autonomous') return AI_AUTONOMOUS_COLOR;
@@ -107,7 +112,7 @@ var BadgeLogic = (function () {
       ? ['<meta name="ai-disclosure" content="' + codeVal.key + '">']
       : [
           '<!-- code and description disagree, so the page-level default is "mixed" -->',
-          '<meta name="ai-disclosure" content="mixed">'
+          '<meta name="ai-disclosure" content="' + MIXED + '">'
         ];
     lines.push('');
     lines.push('<pre ' + discloseAttrs(codeVal) + '>...code...</pre>');
@@ -134,6 +139,7 @@ var BadgeLogic = (function () {
     HUMAN_ONLY_COLOR: HUMAN_ONLY_COLOR,
     AI_AUTONOMOUS_COLOR: AI_AUTONOMOUS_COLOR,
     AI_ASSISTED_COLOR: AI_ASSISTED_COLOR,
+    MIXED: MIXED,
     colorFor: colorFor,
     DOC: DOC,
     SELECT_OPTIONS: SELECT_OPTIONS,
