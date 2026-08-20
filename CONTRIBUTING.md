@@ -87,3 +87,4 @@ current badges.
 ## Code of Conduct
 
 This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md).
+<!-- test: verifying AI Disclosure Reminder Action fires on a real PR event; this PR will be closed after verification -->
