@@ -63,12 +63,14 @@ function findExistingComment(owner, repo, number, token) {
     });
 }
 
-function upsertComment(owner, repo, number, token, existing, text) {
-  if (existing) {
-    if (existing.body === text) return Promise.resolve(); // nothing changed
-    return apiRequest('PATCH', '/repos/' + owner + '/' + repo + '/issues/comments/' + existing.id, token, { body: text });
+function runAction(action, owner, repo, number, token, existing) {
+  if (action.type === 'post') {
+    return apiRequest('POST', '/repos/' + owner + '/' + repo + '/issues/' + number + '/comments', token, { body: action.text });
   }
-  return apiRequest('POST', '/repos/' + owner + '/' + repo + '/issues/' + number + '/comments', token, { body: text });
+  if (action.type === 'patch') {
+    return apiRequest('PATCH', '/repos/' + owner + '/' + repo + '/issues/comments/' + existing.id, token, { body: action.text });
+  }
+  return Promise.resolve();
 }
 
 function main() {
@@ -92,14 +94,13 @@ function main() {
   log(found ? 'Disclosure found in PR body.' : 'No disclosure found in PR body.');
 
   return findExistingComment(owner, repo, pr.number, token).then(function (existing) {
-    if (!found) {
-      return upsertComment(owner, repo, pr.number, token, existing, detect.buildReminderComment(GENERATOR_URL, REPO_URL));
-    }
-    if (existing) {
-      return upsertComment(owner, repo, pr.number, token, existing, detect.buildResolvedComment());
-    }
-    // Disclosure present and no prior reminder was ever posted — stay quiet.
-    return Promise.resolve();
+    var action = detect.decideAction(
+      found, existing,
+      detect.buildReminderComment(GENERATOR_URL, REPO_URL),
+      detect.buildResolvedComment()
+    );
+    log('Action: ' + action.type);
+    return runAction(action, owner, repo, pr.number, token, existing);
   });
 }
 

@@ -40,3 +40,45 @@ test('buildReminderComment and buildResolvedComment both start with the marker',
   assert.ok(resolved.startsWith(detect.MARKER));
   assert.ok(reminder.includes('https://example.com/generator'));
 });
+
+test('decideAction: not found, no existing comment -> post the reminder', () => {
+  assert.deepEqual(
+    detect.decideAction(false, null, 'reminder text', 'resolved text'),
+    { type: 'post', text: 'reminder text' }
+  );
+});
+
+test('decideAction: not found, existing reminder unchanged -> noop', () => {
+  assert.deepEqual(
+    detect.decideAction(false, { body: 'reminder text' }, 'reminder text', 'resolved text'),
+    { type: 'noop' }
+  );
+});
+
+test('decideAction: not found, existing comment stale (e.g. disclosure removed after being resolved) -> patch back to reminder', () => {
+  assert.deepEqual(
+    detect.decideAction(false, { id: 1, body: 'resolved text' }, 'reminder text', 'resolved text'),
+    { type: 'patch', text: 'reminder text' }
+  );
+});
+
+test('decideAction: found, no existing comment -> stay quiet, never post', () => {
+  assert.deepEqual(
+    detect.decideAction(true, null, 'reminder text', 'resolved text'),
+    { type: 'noop' }
+  );
+});
+
+test('decideAction: found, existing reminder -> patch to resolved', () => {
+  assert.deepEqual(
+    detect.decideAction(true, { id: 1, body: 'reminder text' }, 'reminder text', 'resolved text'),
+    { type: 'patch', text: 'resolved text' }
+  );
+});
+
+test('decideAction: found, existing already resolved -> noop', () => {
+  assert.deepEqual(
+    detect.decideAction(true, { body: 'resolved text' }, 'reminder text', 'resolved text'),
+    { type: 'noop' }
+  );
+});

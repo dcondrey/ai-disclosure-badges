@@ -66,10 +66,21 @@ function buildResolvedComment() {
   ].join('\n');
 }
 
+// Pure decision (no I/O, unit-testable) of what to do with the bot's own
+// comment. A resolved PR with no prior reminder stays quiet rather than
+// posting one for a PR that was never flagged.
+function decideAction(found, existing, reminderText, resolvedText) {
+  var targetText = found ? resolvedText : reminderText;
+  if (!existing) return found ? { type: 'noop' } : { type: 'post', text: targetText };
+  if (existing.body === targetText) return { type: 'noop' };
+  return { type: 'patch', text: targetText };
+}
+
 module.exports = {
   VALUES: VALUES,
   MARKER: MARKER,
   hasDisclosure: hasDisclosure,
   buildReminderComment: buildReminderComment,
-  buildResolvedComment: buildResolvedComment
+  buildResolvedComment: buildResolvedComment,
+  decideAction: decideAction
 };
