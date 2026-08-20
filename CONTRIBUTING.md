@@ -36,6 +36,20 @@ DOM-only code (rendering, event wiring) stays inline in `index.html` and
 isn't unit-tested — verify it by hand in a browser per the PR checklist.
 If you change `badge-logic.js`, run the tests before opening a PR.
 
+### The GitHub Action (`action.yml` and `action/`)
+
+A reminder-only PR check that comments when a PR body has no disclosure
+badge or markup yet — never blocking, per the vocabulary's own "no
+enforcement" stance. `action/detect.js` holds the pure, testable logic
+(what counts as "present", the comment text); `action/index.js` is the
+GitHub API glue. Same dependency-free rule applies: `using: 'node20'` and
+built-in `fetch` only, no `@actions/core`/`@actions/github`. Covered by
+`test/action-detect.test.js`, run the same way:
+
+```sh
+node --test
+```
+
 ### The vocabulary itself
 
 `human-only` / `ai-assisted` / `ai-autonomous` / `mixed` are **not** defined

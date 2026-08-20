@@ -1,0 +1,19 @@
+name: 'AI Disclosure Reminder'
+description: >-
+  Reminds PR authors to include an AI disclosure badge or spec markup in the
+  PR body if one isn't already present. Comment-only: never fails the
+  workflow. See https://github.com/dcondrey/ai-disclosure-badges for the
+  vocabulary this checks for.
+author: 'dcondrey'
+branding:
+  icon: 'message-circle'
+  color: 'gray-dark'
+
+inputs:
+  github-token:
+    description: 'Token used to read and post PR comments (needs pull-requests: write).'
+    required: true
+
+runs:
+  using: 'node20'
+  main: 'action/index.js'

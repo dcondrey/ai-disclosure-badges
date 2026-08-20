@@ -53,6 +53,41 @@ this project's convention for a README or PR; the markup snippet is what
 the [specification][spec] itself actually defines — use it when what you're
 disclosing is HTML content rather than a README/PR body.
 
+## Use the GitHub Action
+
+This repo also ships as a GitHub Action: a reminder-only bot that comments on
+a PR if its body doesn't include a disclosure badge or spec markup yet. It
+never fails the check — this is a nudge, not a gate, matching the "no
+enforcement" nature of the vocabulary itself (see
+[What each badge means](#what-each-badge-means)).
+
+```yaml
+# pull_request_target, not pull_request: a fork PR's default token is
+# read-only under plain pull_request, which would silently block the bot
+# from commenting on exactly the external-contributor PRs it's for. Safe
+# here since the action never checks out or runs anything from the PR
+# itself — it only reads the PR body from the event payload.
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dcondrey/ai-disclosure-badges@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+Pin to a commit SHA instead of `@main` for anything beyond quick trials —
+this repo hasn't cut a tagged release yet. See [`action.yml`](action.yml) and
+[`action/index.js`](action/index.js) for what it checks and how.
+
 ## Or just copy the markdown
 
 **`human-only`**

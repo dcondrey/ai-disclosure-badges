@@ -1,0 +1,24 @@
+name: AI Disclosure Reminder
+
+# pull_request_target (not pull_request): a fork PR's GITHUB_TOKEN under the
+# plain pull_request event is read-only, so the bot couldn't post a comment
+# on exactly the external-contributor PRs it's most useful for. Safe here
+# because this checkout has no `ref:` override, so it runs the trusted
+# base-branch code, and the action only reads pr.body from the event
+# payload — it never checks out or executes anything from the PR itself.
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
