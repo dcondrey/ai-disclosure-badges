@@ -1,0 +1,22 @@
+name: Test
+
+# Runs the zero-dependency node:test suite (badge-logic.js and action/) so
+# the PR template's "node --test passes" checkbox is enforced, not just
+# self-attested.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node --test
