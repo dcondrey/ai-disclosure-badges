@@ -73,7 +73,7 @@ function runAction(action, owner, repo, number, token, existing) {
   return Promise.resolve();
 }
 
-function main() {
+async function main() {
   var event = readEvent();
   var pr = event.pull_request;
   if (!pr) {
