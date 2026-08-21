@@ -1,9 +1,5 @@
 name: 'AI Disclosure Reminder'
-description: >-
-  Reminds PR authors to include an AI disclosure badge or spec markup in the
-  PR body if one isn't already present. Comment-only: never fails the
-  workflow. See https://github.com/dcondrey/ai-disclosure-badges for the
-  vocabulary this checks for.
+description: 'Reminds PR authors to disclose AI involvement if the PR body does not already say so. Never fails the workflow.'
 author: 'dcondrey'
 branding:
   icon: 'message-circle'
