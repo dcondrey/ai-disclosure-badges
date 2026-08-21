@@ -79,13 +79,13 @@ jobs:
   remind:
     runs-on: ubuntu-latest
     steps:
-      - uses: dcondrey/ai-disclosure-badges@main
+      - uses: dcondrey/ai-disclosure-badges@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Pin to a commit SHA instead of `@main` for anything beyond quick trials —
-this repo hasn't cut a tagged release yet. See [`action.yml`](action.yml) and
+`v1` tracks the latest `v1.x.x` release; pin to a commit SHA instead if you
+want a fully immutable reference. See [`action.yml`](action.yml) and
 [`action/index.js`](action/index.js) for what it checks and how.
 
 ## Or just copy the markdown
