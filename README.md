@@ -1,6 +1,12 @@
 # AI Disclosure Badges
 
 <p align="center">
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/test.yml"><img alt="Test" src="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/test.yml/badge.svg"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/link-check.yml"><img alt="Link Check" src="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/link-check.yml/badge.svg"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/codeql.yml/badge.svg"></a>
+</p>
+
+<p align="center">
   <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square"></a>
   <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square"></a>
   <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md"><img alt="AI Disclosure: ai-autonomous" src="https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square"></a>
