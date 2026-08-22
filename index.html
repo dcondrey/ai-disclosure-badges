@@ -157,7 +157,7 @@
     background: var(--panel);
   }
   #result[hidden] { display: none; }
-  #badgePreview { display: flex; align-items: center; margin: 0.5rem 0 1rem; }
+  #badgePreview { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin: 0.5rem 0 1rem; }
   #badgePreview img { display: block; height: 20px; }
   select.scope-select {
     width: 100%;
@@ -204,6 +204,9 @@
     height: 3.2em;
   }
   textarea.snippet.markup { height: 8em; }
+  .ladder-back, button.copy {
+    user-select: none;
+  }
   button.copy {
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -495,13 +498,21 @@
 
   function renderBadges(badges) {
     var preview = document.getElementById('badgePreview');
-    preview.innerHTML = '';
-    badges.forEach(function (b) {
-      var img = document.createElement('img');
-      img.src = b.url;
-      img.alt = b.altText;
-      img.title = b.titleText;
-      preview.appendChild(img);
+    var imgs = preview.children;
+    // Patch existing <img> elements in place rather than rebuilding on every
+    // keystroke (render() runs on every 'input' event) — only src/alt/title
+    // actually change; the element count only changes between whole/split
+    // scope. Avoids needless DOM churn, style recalc, and repaint.
+    if (imgs.length !== badges.length) {
+      preview.innerHTML = '';
+      badges.forEach(function () { preview.appendChild(document.createElement('img')); });
+      imgs = preview.children;
+    }
+    badges.forEach(function (b, i) {
+      var img = imgs[i];
+      if (img.src !== b.url) img.src = b.url;
+      if (img.alt !== b.altText) img.alt = b.altText;
+      if (img.title !== b.titleText) img.title = b.titleText;
     });
 
     document.getElementById('mdSnippet').value = badges.map(function (b) {
