@@ -38,7 +38,11 @@ test('buildReminderComment and buildResolvedComment both start with the marker',
   const resolved = detect.buildResolvedComment();
   assert.ok(reminder.startsWith(detect.MARKER));
   assert.ok(resolved.startsWith(detect.MARKER));
-  assert.ok(reminder.includes('https://example.com/generator'));
+  // Exact markdown-link match, not a substring check on a URL-shaped string
+  // (CodeQL js/incomplete-url-substring-sanitization flags .includes() on a
+  // URL even here, where it's a test fixture rather than a security check —
+  // asserting the precise rendered link is a strictly better test anyway).
+  assert.match(reminder, /\[https:\/\/example\.com\/generator\]\(https:\/\/example\.com\/generator\)/);
 });
 
 test('decideAction: not found, no existing comment -> post the reminder', () => {
