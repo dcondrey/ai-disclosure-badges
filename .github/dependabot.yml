@@ -4,3 +4,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      # init and analyze must stay on the identical commit SHA (see
+      # codeql.yml) — grouped so Dependabot bumps both in one PR, never one
+      # without the other.
+      codeql:
+        patterns:
+          - "github/codeql-action*"
