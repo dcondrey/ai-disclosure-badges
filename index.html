@@ -79,13 +79,13 @@
 <style>
   .skip-link {
     position: absolute;
-    left: -9999px;
+    left: -9999px; /* off-screen, not a size — px is correct here, not a length to scale */
     top: 0;
     background: var(--accent);
     color: #fff;
     padding: 0.6rem 1rem;
     z-index: 10;
-    border-radius: 0 0 6px 0;
+    border-radius: 0 0 0.375rem 0;
   }
   .skip-link:focus { left: 0; }
   :root {
@@ -96,6 +96,9 @@
     --border: #d8d8d8;
     --accent: #2454ff;
     --panel: #f6f6f6;
+    --text-sm: 0.875rem;
+    --radius: 0.5rem;
+    --radius-sm: 0.375rem;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -108,124 +111,147 @@
     }
   }
   * { box-sizing: border-box; }
+  /* Form controls don't inherit font/color from the page by default in any
+     browser — this is what makes them pick up the body's type instead of
+     each browser's own default UI font, and lets every control below just
+     say `color: inherit` once instead of repeating var(--fg). */
+  button, input, select, textarea {
+    font: inherit;
+    color: inherit;
+    margin: 0;
+  }
+  ::selection { background: var(--accent); color: var(--bg); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   body {
     background: var(--bg);
     color: var(--fg);
     font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    max-width: 720px;
+    max-width: 45rem;
     margin: 0 auto;
     padding: 2.5rem 1.25rem 4rem;
   }
-  h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  h1 {
+    font-size: 1.5rem;
+    line-height: 1.2; /* body copy's 1.5 reads loose at display size */
+    letter-spacing: -0.01em; /* subtle tightening, not tracking-heavy */
+    margin-bottom: 0.25rem;
+  }
   p.lede { color: var(--muted); margin-top: 0; }
   fieldset {
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--radius);
     padding: 1rem 1.25rem 1.25rem;
     margin: 0 0 1.25rem;
   }
   fieldset[hidden] { display: none; }
-  legend { font-weight: 600; padding: 0 0.4rem; }
-  .note { color: var(--muted); font-size: 0.9rem; margin: 0.25rem 0 0.75rem; }
+  legend { font-weight: 600; padding: 0 0.5rem; }
+  .note { color: var(--muted); font-size: var(--text-sm); margin: 0.25rem 0 0.75rem; }
   label.choice {
     display: block;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.6rem 0.8rem;
-    margin: 0.4rem 0;
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.8rem; /* deliberately not on the 0.25rem grid — keeps a ≥44px tap target */
+    margin: 0.5rem 0;
     cursor: pointer;
+    transition: border-color 0.15s ease;
   }
   label.choice:hover, label.choice:focus-within { border-color: var(--accent); }
   label.choice input { margin-right: 0.5rem; }
   .ladder-progress { font-weight: 600; color: var(--fg); }
   .ladder-back {
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     background: var(--bg);
-    color: var(--fg);
-    padding: 0.5rem 0.9rem;
+    padding: 0.5rem var(--text-sm);
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     margin-top: 0.25rem;
+    transition: border-color 0.15s ease;
   }
   .ladder-back:hover, .ladder-back:focus-visible { border-color: var(--accent); }
-  fieldset.ladder-row legend img { height: 16px; vertical-align: middle; margin-right: 0.4rem; position: relative; top: -1px; }
+  fieldset.ladder-row legend img { height: 1rem; vertical-align: middle; margin-right: 0.5rem; position: relative; top: -1px; }
   #result {
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--radius);
     padding: 1.25rem;
     background: var(--panel);
   }
   #result[hidden] { display: none; }
-  #badgePreview { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin: 0.5rem 0 1rem; }
-  #badgePreview img { display: block; height: 20px; }
+  #badgePreview { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 0.5rem 0 1rem; }
+  #badgePreview img { display: block; height: 1.25rem; }
   select.scope-select {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     background: var(--bg);
-    color: var(--fg);
     margin-bottom: 0.75rem;
+    transition: border-color 0.15s ease;
   }
+  select.scope-select:hover, select.scope-select:focus-visible { border-color: var(--accent); }
   input.text-input {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     background: var(--bg);
-    color: var(--fg);
+    transition: border-color 0.15s ease;
   }
+  input.text-input:hover, input.text-input:focus-visible { border-color: var(--accent); }
   .split-col { margin-bottom: 0.75rem; }
   .split-col label.field-label {
     display: block;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     color: var(--muted);
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.25rem;
   }
   .snippet-row { margin-bottom: 1rem; }
   .snippet-row label {
     display: block;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     color: var(--muted);
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.25rem;
   }
   .snippet-wrap { display: flex; gap: 0.5rem; }
   textarea.snippet {
     flex: 1;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     padding: 0.5rem;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     background: var(--bg);
-    color: var(--fg);
     resize: none;
-    height: 3.2em;
+    height: 3.2em; /* em, not rem — scales with this control's own font-size */
+    transition: border-color 0.15s ease;
   }
   textarea.snippet.markup { height: 8em; }
+  textarea.snippet:hover, textarea.snippet:focus-visible { border-color: var(--accent); }
   .ladder-back, button.copy {
     user-select: none;
   }
   button.copy {
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     background: var(--bg);
-    color: var(--fg);
-    padding: 0 0.9rem;
+    padding: 0 var(--text-sm);
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
+    transition: border-color 0.15s ease;
   }
-  button.copy:hover { border-color: var(--accent); }
+  button.copy:hover, button.copy:focus-visible { border-color: var(--accent); }
   a.explainer { color: var(--accent); }
   footer {
     margin-top: 3rem;
     color: var(--muted);
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     border-top: 1px solid var(--border);
     padding-top: 1rem;
   }
   footer a { color: inherit; }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.01ms !important; }
+  }
 </style>
 </head>
 <body>
