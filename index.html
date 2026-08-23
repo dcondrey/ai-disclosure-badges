@@ -222,10 +222,11 @@
     border-radius: var(--radius-sm);
     background: var(--bg);
     resize: none;
-    height: 3.2em; /* em, not rem — scales with this control's own font-size */
+    overflow: hidden; /* auto-sized by JS to fit content — never needs to scroll */
+    min-height: 3.2em; /* em, not rem — scales with this control's own font-size */
     transition: border-color 0.15s ease;
   }
-  textarea.snippet.markup { height: 8em; }
+  textarea.snippet.markup { min-height: 8em; }
   textarea.snippet:hover, textarea.snippet:focus-visible { border-color: var(--accent); }
   .ladder-back, button.copy {
     user-select: none;
@@ -359,6 +360,7 @@
 </fieldset>
 
 <section id="result" hidden>
+  <p class="note" id="backRow" hidden>Use <button type="button" class="ladder-back" id="ladderBackBtn" aria-label="Back to the previous question">← Back</button> to change your answer.</p>
   <h2>Your badge</h2>
   <div id="badgePreview" aria-live="polite"></div>
   <div class="snippet-row">
@@ -430,53 +432,56 @@
     var terminalReached = ladderAnswers.length === BadgeLogic.LADDER.length && ladderAnswers[BadgeLogic.LADDER.length - 1] === 'yes';
 
     if (stopped || terminalReached) {
-      var summary = document.createElement('p');
-      summary.className = 'note';
-      summary.textContent = 'Your badge is below. Use ← Back to change your answer.';
-      container.appendChild(summary);
-    } else {
-      var i = ladderAnswers.length;
-      var row = BadgeLogic.LADDER[i];
-      var badge = BadgeLogic.buildBadge('AI Disclosure', row, null);
-      var fs = document.createElement('fieldset');
-      fs.className = 'ladder-row';
-
-      var progress = document.createElement('p');
-      progress.className = 'note ladder-progress';
-      progress.textContent = 'Question ' + (i + 1) + ' of up to ' + BadgeLogic.LADDER.length;
-      container.appendChild(progress);
-
-      var legend = document.createElement('legend');
-      var img = document.createElement('img');
-      img.src = badge.url;
-      img.alt = '';
-      img.setAttribute('aria-hidden', 'true');
-      legend.appendChild(img);
-      legend.appendChild(document.createTextNode('If you stop here: ' + row.message));
-      fs.appendChild(legend);
-
-      var qId = 'ladder-q-' + i;
-      var q = document.createElement('p');
-      q.className = 'note';
-      q.id = qId;
-      q.textContent = row.question;
-      fs.appendChild(q);
-
-      ['yes', 'no'].forEach(function (v) {
-        var label = document.createElement('label');
-        label.className = 'choice';
-        var input = document.createElement('input');
-        input.type = 'radio';
-        input.name = 'ladder-' + i;
-        input.value = v;
-        input.setAttribute('aria-describedby', qId);
-        label.appendChild(input);
-        label.appendChild(document.createTextNode(' ' + (v === 'yes' ? 'Yes' : 'No — stop here')));
-        fs.appendChild(label);
-      });
-
-      container.appendChild(fs);
+      // The result section below takes over from here, with its own Back
+      // control right next to the actual badge (#backRow). Leaving this
+      // empty — rather than a one-line "your badge is below" summary —
+      // avoids the question fieldset (question text + two choices, several
+      // lines tall) collapsing down to one line and yanking everything
+      // below it, including that same Back button, sharply up the page.
+      return;
     }
+
+    var i = ladderAnswers.length;
+    var row = BadgeLogic.LADDER[i];
+    var badge = BadgeLogic.buildBadge('AI Disclosure', row, null);
+    var fs = document.createElement('fieldset');
+    fs.className = 'ladder-row';
+
+    var progress = document.createElement('p');
+    progress.className = 'note ladder-progress';
+    progress.textContent = 'Question ' + (i + 1) + ' of up to ' + BadgeLogic.LADDER.length;
+    container.appendChild(progress);
+
+    var legend = document.createElement('legend');
+    var img = document.createElement('img');
+    img.src = badge.url;
+    img.alt = '';
+    img.setAttribute('aria-hidden', 'true');
+    legend.appendChild(img);
+    legend.appendChild(document.createTextNode('If you stop here: ' + row.message));
+    fs.appendChild(legend);
+
+    var qId = 'ladder-q-' + i;
+    var q = document.createElement('p');
+    q.className = 'note';
+    q.id = qId;
+    q.textContent = row.question;
+    fs.appendChild(q);
+
+    ['yes', 'no'].forEach(function (v) {
+      var label = document.createElement('label');
+      label.className = 'choice';
+      var input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'ladder-' + i;
+      input.value = v;
+      input.setAttribute('aria-describedby', qId);
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(' ' + (v === 'yes' ? 'Yes' : 'No — stop here')));
+      fs.appendChild(label);
+    });
+
+    container.appendChild(fs);
 
     if (ladderAnswers.length > 0) {
       var backBtn = document.createElement('button');
@@ -513,6 +518,7 @@
   });
 
   renderLadder();
+  document.getElementById('ladderBackBtn').addEventListener('click', goBack);
 
   function selectValue(selectId) {
     var sel = document.getElementById(selectId);
@@ -520,6 +526,14 @@
       if (BadgeLogic.SELECT_OPTIONS[i].value === sel.value) return BadgeLogic.SELECT_OPTIONS[i];
     }
     return BadgeLogic.SELECT_OPTIONS[0];
+  }
+
+  // Snippets vary a lot in length (a note or metadata can make a single
+  // logical line wrap across many visual ones) — grow the textarea to fit
+  // rather than leaving it clipped at a fixed height.
+  function autosize(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
   }
 
   function renderBadges(badges) {
@@ -541,13 +555,20 @@
       if (img.title !== b.titleText) img.title = b.titleText;
     });
 
-    document.getElementById('mdSnippet').value = badges.map(function (b) {
+    // #result must already be visible (not [hidden]) by the time this runs —
+    // scrollHeight reads 0 on a display:none ancestor, which would collapse
+    // these to zero height instead of sizing to content.
+    var mdSnippet = document.getElementById('mdSnippet');
+    mdSnippet.value = badges.map(function (b) {
       return '[![' + b.altText + '](' + b.url + ' "' + BadgeLogic.escMdTitle(b.titleText) + '")](' + b.docHref + ')';
     }).join('');
+    autosize(mdSnippet);
 
-    document.getElementById('htmlSnippet').value = badges.map(function (b) {
+    var htmlSnippet = document.getElementById('htmlSnippet');
+    htmlSnippet.value = badges.map(function (b) {
       return '<a href="' + b.docHref + '" title="' + BadgeLogic.escAttr(b.titleText) + '"><img src="' + b.url + '" alt="' + BadgeLogic.escAttr(b.altText) + '"></a>';
     }).join('');
+    autosize(htmlSnippet);
 
     var links = badges.map(function (b) {
       return '<a class="explainer" href="' + b.docHref + '">' + b.altText.split(':')[0] + '</a>';
@@ -565,15 +586,18 @@
     var result = document.getElementById('result');
 
     if (scope === 'split') {
+      document.getElementById('backRow').hidden = true;
       var codeVal = selectValue('codeSelect');
       var descVal = selectValue('descSelect');
       var note = document.getElementById('splitNote').value.trim();
+      result.hidden = false; // before renderBadges/autosize — see its comment
       renderBadges([
         BadgeLogic.buildBadge('Code', codeVal, note),
         BadgeLogic.buildBadge('Description', descVal, note)
       ]);
-      document.getElementById('markupSnippet').value = BadgeLogic.buildSplitMarkup(codeVal, descVal);
-      result.hidden = false;
+      var splitMarkup = document.getElementById('markupSnippet');
+      splitMarkup.value = BadgeLogic.buildSplitMarkup(codeVal, descVal);
+      autosize(splitMarkup);
       return;
     }
 
@@ -585,15 +609,18 @@
     // a Back-button answer change. No need to re-gate here too.
     document.getElementById('noteField').hidden = !value;
     document.getElementById('metaFields').hidden = !value || value.key === 'human-only';
+    document.getElementById('backRow').hidden = !value;
     if (!value) { result.hidden = true; return; }
 
     var wholeNote = document.getElementById('roleNote').value.trim();
+    result.hidden = false; // before renderBadges/autosize — see its comment
     renderBadges([BadgeLogic.buildBadge('AI Disclosure', value, wholeNote)]);
     var model = document.getElementById('aiModel').value.trim();
     var provider = document.getElementById('aiProvider').value.trim();
     var promptUrl = document.getElementById('aiPromptUrl').value.trim();
-    document.getElementById('markupSnippet').value = BadgeLogic.buildWholeMarkup(value, model, provider, promptUrl);
-    result.hidden = false;
+    var wholeMarkup = document.getElementById('markupSnippet');
+    wholeMarkup.value = BadgeLogic.buildWholeMarkup(value, model, provider, promptUrl);
+    autosize(wholeMarkup);
   }
 
   document.addEventListener('change', render);
