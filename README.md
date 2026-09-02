@@ -1,21 +1,14 @@
-# AI Disclosure Badges
+<!-- repo-header:start -->
+<img src="https://github.com/dcondrey.png?size=160" alt="AI Disclosure Badges logo" width="120" align="left">
 
-<p align="center">
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/test.yml"><img alt="Test" src="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/test.yml/badge.svg"></a>
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/link-check.yml"><img alt="Link Check" src="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/link-check.yml/badge.svg"></a>
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/codeql.yml/badge.svg"></a>
-</p>
+<h1>AI Disclosure Badges</h1>
 
-<p align="center">
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square"></a>
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square"></a>
-  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md"><img alt="AI Disclosure: ai-autonomous" src="https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square"></a>
-</p>
+<p><strong>Shields.io-style AI disclosure badges (human-only / ai-assisted / ai-autonomous) + a generator and GitHub Action reminder bot, based on the W3C AI Content Disclosure vocabulary</strong></p>
 
-Shields.io-style badges for the `human-only` / `ai-assisted` / `ai-autonomous`
-vocabulary defined by the
-[AI Content Disclosure for HTML][spec] specification, from the W3C AI
-Content Disclosure Community Group.
+<br clear="left">
+
+[![CI](https://img.shields.io/github/actions/workflow/status/dcondrey/ai-disclosure-badges/test.yml?style=flat-square&labelColor=20232a&branch=main&label=CI)](https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/test.yml) [![CodeQL](https://img.shields.io/github/actions/workflow/status/dcondrey/ai-disclosure-badges/codeql.yml?style=flat-square&labelColor=20232a&branch=main&label=CodeQL)](https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/codeql.yml) [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14245/badge)](https://www.bestpractices.dev/projects/14245) [![License](https://img.shields.io/github/license/dcondrey/ai-disclosure-badges?style=flat-square&labelColor=20232a&color=007ec6&label=license)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/LICENSE) [![Code of Conduct](https://img.shields.io/badge/code%20of%20conduct-Contributor%20Covenant%202.1-6a4c93?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/CODE_OF_CONDUCT.md) [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-Sponsor-EA4AAA?style=flat-square&labelColor=20232a)](https://github.com/sponsors/dcondrey) <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square&labelColor=20232a"></a> <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square&labelColor=20232a"></a> <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md"><img alt="AI Disclosure: ai-autonomous" src="https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square&labelColor=20232a"></a>
+<!-- repo-header:end -->
 
 **This is an independent reference implementation, not a W3C CG deliverable.**
 The disclosure vocabulary itself is normatively defined and maintained at
@@ -98,16 +91,16 @@ want a fully immutable reference. See [`action.yml`](action.yml) and
 
 **`human-only`**
 
-[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
+[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
 ```markdown
-[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
+[![AI Disclosure: human-only](https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)
 ```
 
 **`ai-assisted`**
 
-[![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```markdown
-[![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![AI Disclosure: ai-assisted](https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
 This project previously offered an optional AI-authorship percentage on
@@ -118,9 +111,9 @@ for why.
 
 **`ai-autonomous`**
 
-[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
+[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
 ```markdown
-[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
+[![AI Disclosure: ai-autonomous](https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md)
 ```
 
 ## Or just copy the markup
@@ -181,9 +174,9 @@ code and the surrounding description genuinely differ — e.g. AI-drafted PR
 description summarizing human-written code — the generator can produce two
 adjacent badges instead of one, each citing its own value:
 
-[![Code: human-only](https://img.shields.io/badge/Code-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted](https://img.shields.io/badge/Description-ai--assisted-6B7280?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![Code: human-only](https://img.shields.io/badge/Code-human--only-C86A49?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted](https://img.shields.io/badge/Description-ai--assisted-6B7280?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```markdown
-[![Code: human-only](https://img.shields.io/badge/Code-human--only-C86A49?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted](https://img.shields.io/badge/Description-ai--assisted-6B7280?style=flat-square)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
+[![Code: human-only](https://img.shields.io/badge/Code-human--only-C86A49?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md)[![Description: ai-assisted](https://img.shields.io/badge/Description-ai--assisted-6B7280?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md)
 ```
 
 No space between the two image links keeps them visually joined into one
