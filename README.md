@@ -1,15 +1,22 @@
 <!-- repo-header:start -->
-<img src="https://github.com/dcondrey.png?size=160" alt="AI Disclosure Badges logo" width="120" align="left">
+<h3 align="center">AI Disclosure Badges</h3>
 
-<h1>AI Disclosure Badges</h1>
+<p align="center"><strong>Shields.io-style AI disclosure badges (human-only / ai-assisted / ai-autonomous) + a generator and GitHub Action reminder bot, based on the W3C AI Content Disclosure vocabulary</strong></p>
 
-<p><strong>Shields.io-style AI disclosure badges (human-only / ai-assisted / ai-autonomous) + a generator and GitHub Action reminder bot, based on the W3C AI Content Disclosure vocabulary</strong></p>
-
-<br clear="left">
-
-[![CI](https://img.shields.io/github/actions/workflow/status/dcondrey/ai-disclosure-badges/test.yml?style=flat-square&labelColor=20232a&branch=main&label=CI)](https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/test.yml) [![CodeQL](https://img.shields.io/github/actions/workflow/status/dcondrey/ai-disclosure-badges/codeql.yml?style=flat-square&labelColor=20232a&branch=main&label=CodeQL)](https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/codeql.yml) [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14245/badge)](https://www.bestpractices.dev/projects/14245) [![License](https://img.shields.io/github/license/dcondrey/ai-disclosure-badges?style=flat-square&labelColor=20232a&color=007ec6&label=license)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/LICENSE) [![Code of Conduct](https://img.shields.io/badge/code%20of%20conduct-Contributor%20Covenant%202.1-6a4c93?style=flat-square&labelColor=20232a)](https://github.com/dcondrey/ai-disclosure-badges/blob/main/CODE_OF_CONDUCT.md) [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-Sponsor-EA4AAA?style=flat-square&labelColor=20232a)](https://github.com/sponsors/dcondrey) <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square&labelColor=20232a"></a> <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square&labelColor=20232a"></a> <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md"><img alt="AI Disclosure: ai-autonomous" src="https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square&labelColor=20232a"></a>
+<p align="center">
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/test.yml"><img src="https://img.shields.io/github/actions/workflow/status/dcondrey/ai-disclosure-badges/test.yml?style=flat-square&labelColor=20232a&branch=main&label=CI" alt="CI"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/actions/workflows/codeql.yml"><img src="https://img.shields.io/github/actions/workflow/status/dcondrey/ai-disclosure-badges/codeql.yml?style=flat-square&labelColor=20232a&branch=main&label=CodeQL" alt="CodeQL"></a>
+  <a href="https://www.bestpractices.dev/projects/14245"><img src="https://www.bestpractices.dev/projects/14245/badge" alt="OpenSSF Best Practices"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/LICENSE"><img src="https://img.shields.io/github/license/dcondrey/ai-disclosure-badges?style=flat-square&labelColor=20232a&color=007ec6&label=license" alt="License"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/CODE_OF_CONDUCT.md"><img src="https://img.shields.io/badge/code%20of%20conduct-Contributor%20Covenant%202.1-6a4c93?style=flat-square&labelColor=20232a" alt="Code of Conduct"></a>
+  <a href="https://github.com/sponsors/dcondrey"><img src="https://img.shields.io/badge/GitHub%20Sponsors-Sponsor-EA4AAA?style=flat-square&labelColor=20232a" alt="GitHub Sponsors"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/human-only.md"><img alt="AI Disclosure: human-only" src="https://img.shields.io/badge/AI_Disclosure-human--only-C86A49?style=flat-square&labelColor=20232a"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-assisted.md"><img alt="AI Disclosure: ai-assisted" src="https://img.shields.io/badge/AI_Disclosure-ai--assisted-6B7280?style=flat-square&labelColor=20232a"></a>
+  <a href="https://github.com/dcondrey/ai-disclosure-badges/blob/main/docs/ai-autonomous.md"><img alt="AI Disclosure: ai-autonomous" src="https://img.shields.io/badge/AI_Disclosure-ai--autonomous-6C4EAF?style=flat-square&labelColor=20232a"></a>
+</p>
 <!-- repo-header:end -->
 
+---
 **This is an independent reference implementation, not a W3C CG deliverable.**
 The disclosure vocabulary itself is normatively defined and maintained at
 [w3c-cg/ai-content-disclosure][spec-repo]; this repo only packages that
